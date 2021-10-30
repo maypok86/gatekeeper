@@ -1,0 +1,32 @@
+name: Run unit tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.17
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Setup environment
+        run: make setup
+
+      - name: Format code
+        run: make fmt
+
+      - name: Lint code
+        run: make lint
+
+      - name: Test code
+        run: make test
