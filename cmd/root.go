@@ -7,7 +7,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "gk",
 	Short: "Gatekeeper service and cli",
-	Long: `Gatekeeper is rate limiting service and cli tool`,
+	Long:  `Gatekeeper is rate limiting service and cli tool`,
 }
 
 func Execute() {

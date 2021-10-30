@@ -16,3 +16,8 @@
 
 # Goland
 /.idea/
+
+# temp files and dirs
+/bin/
+coverage.txt
+develop.log
