@@ -21,8 +21,8 @@ var levelMap = map[string]zapcore.Level{
 }
 
 type Config struct {
-	Level string `envconfig:"LOGGER_LEVEL,default=info"`
-	File  string `envconfig:"LOGGER_FILE,default=develop.log"`
+	Level string `envconfig:"LOGGER_LEVEL" default:"info"`
+	File  string `envconfig:"LOGGER_FILE" default:"develop.log"`
 }
 
 func getLoggerLevel(lvl string) zapcore.Level {
