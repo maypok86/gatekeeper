@@ -23,10 +23,23 @@ type Bucket struct {
 	Rate          int           `envconfig:"BUCKET_RATE"`
 }
 
+const (
+	defaultTTL           = 60
+	defaultCleanInterval = 61
+)
+
 var (
 	config Config
 	once   sync.Once
 )
+
+func GetBucketByRate(rate int) *Bucket {
+	return &Bucket{
+		Rate:          rate,
+		TTL:           defaultTTL,
+		CleanInterval: defaultCleanInterval,
+	}
+}
 
 func Get() *Config {
 	once.Do(func() {

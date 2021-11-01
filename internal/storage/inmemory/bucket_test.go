@@ -11,26 +11,18 @@ import (
 
 const (
 	testBucketName = "test"
-	defaultTTL     = 60
 )
-
-var ctx = context.Background()
-
-func changeConfigRate(rate int) {
-	config.Get().Bucket.Rate = rate
-}
 
 func TestNewBucketStorage(t *testing.T) {
 	rate := 200
-	changeConfigRate(rate)
-	b := NewBucketStorage()
+	b := NewBucketStorage(config.GetBucketByRate(rate))
 	require.NotNil(t, b)
 	require.Equal(t, rate, b.rate)
 }
 
 func TestBucketStorage_Allow(t *testing.T) {
-	changeConfigRate(2)
-	st := NewBucketStorage()
+	st := NewBucketStorage(config.GetBucketByRate(2))
+	ctx := context.Background()
 	require.True(t, st.Allow(ctx, "test"))
 	require.True(t, st.Allow(ctx, "test"))
 	require.False(t, st.Allow(ctx, "test"))
@@ -38,13 +30,13 @@ func TestBucketStorage_Allow(t *testing.T) {
 }
 
 func TestBucketStorage_Clean(t *testing.T) {
-	changeConfigRate(2)
-	st := NewBucketStorage()
+	cfg := config.GetBucketByRate(2)
+	st := NewBucketStorage(cfg)
 	st.buckets["f1"] = &bucket{
-		lastAccess: time.Now().Unix() - defaultTTL - 10,
+		lastAccess: time.Now().Unix() - cfg.TTL.Nanoseconds() - 10,
 	}
 	st.buckets["f2"] = &bucket{
-		lastAccess: time.Now().Unix() - defaultTTL + 10,
+		lastAccess: time.Now().Unix() - cfg.TTL.Nanoseconds() + 10,
 	}
 
 	st.clean()
@@ -54,8 +46,8 @@ func TestBucketStorage_Clean(t *testing.T) {
 }
 
 func TestBucketStorage_Remove(t *testing.T) {
-	changeConfigRate(2)
-	st := NewBucketStorage()
+	st := NewBucketStorage(config.GetBucketByRate(2))
+	ctx := context.Background()
 	require.True(t, st.Allow(ctx, testBucketName))
 	require.True(t, st.Allow(ctx, testBucketName))
 	require.False(t, st.Allow(ctx, testBucketName))
@@ -66,13 +58,12 @@ func TestBucketStorage_Remove(t *testing.T) {
 }
 
 func TestBucketStorage_CleanByTimer(t *testing.T) {
-	config.Get().Bucket = &config.Bucket{
+	st := NewBucketStorage(&config.Bucket{
 		Rate:          2,
 		TTL:           1,
 		CleanInterval: 1010 * time.Millisecond,
-	}
-
-	st := NewBucketStorage()
+	})
+	ctx := context.Background()
 	require.True(t, st.Allow(ctx, testBucketName))
 	require.True(t, st.HasBucket(ctx, testBucketName))
 	cond := func() bool {
@@ -82,27 +73,28 @@ func TestBucketStorage_CleanByTimer(t *testing.T) {
 }
 
 func TestBucketStorage_TokenExpire(t *testing.T) {
-	config.Get().Bucket = &config.Bucket{
+	cfg := &config.Bucket{
 		Rate: 2,
 		TTL:  1,
 	}
 
-	st := NewBucketStorage()
+	st := NewBucketStorage(cfg)
+	ctx := context.Background()
 	require.True(t, st.Allow(ctx, testBucketName))
 	require.True(t, st.Allow(ctx, testBucketName))
-	time.Sleep(config.Get().Bucket.TTL * time.Second)
+	time.Sleep(cfg.TTL * time.Second)
 	require.True(t, st.Allow(ctx, testBucketName))
 }
 
 func TestBucketStorage_HasBucket_Exists(t *testing.T) {
-	changeConfigRate(2)
-	st := NewBucketStorage()
+	st := NewBucketStorage(config.GetBucketByRate(2))
+	ctx := context.Background()
 	require.True(t, st.Allow(ctx, testBucketName))
 	require.True(t, st.HasBucket(ctx, testBucketName))
 }
 
 func TestBucketStorage_HasBucket_NotExists(t *testing.T) {
-	changeConfigRate(2)
-	reqLimiter := NewBucketStorage()
-	require.False(t, reqLimiter.HasBucket(ctx, testBucketName))
+	st := NewBucketStorage(config.GetBucketByRate(2))
+	ctx := context.Background()
+	require.False(t, st.HasBucket(ctx, testBucketName))
 }

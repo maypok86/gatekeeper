@@ -15,7 +15,6 @@ import (
 var (
 	ErrInvalidIpv4Address = errors.New("invalid ip address")
 	ErrInvalidIpv4Subnet  = errors.New("invalid ip subnet")
-	ErrNotExistIPOrSubnet = errors.New("not exist ip or subnet")
 )
 
 type IPStorage struct {

@@ -11,14 +11,12 @@ type Storage struct {
 	IP     IP
 }
 
-func New() (*Storage, error) {
-	cfg := config.Get().Bucket
-
+func New(cfg *config.Bucket) (*Storage, error) {
 	var s *Storage
 	switch cfg.Type {
 	case "inmemory":
 		s = &Storage{
-			Bucket: inmemory.NewBucketStorage(),
+			Bucket: inmemory.NewBucketStorage(cfg),
 			IP:     inmemory.NewIPStorage(),
 		}
 	default:

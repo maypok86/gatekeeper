@@ -23,9 +23,7 @@ type bucket struct {
 	mutex      sync.Mutex
 }
 
-func NewBucketStorage() *BucketStorage {
-	cfg := config.Get().Bucket
-
+func NewBucketStorage(cfg *config.Bucket) *BucketStorage {
 	st := &BucketStorage{
 		ttl:     cfg.TTL,
 		rate:    cfg.Rate,
