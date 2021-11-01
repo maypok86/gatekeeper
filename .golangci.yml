@@ -27,7 +27,6 @@ linters:
     - depguard
     - dogsled
     - dupl
-    - durationcheck
     - errorlint
     - exhaustive
     - exportloopref

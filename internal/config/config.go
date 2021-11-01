@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"sync"
+	"time"
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/maypok86/gatekeeper/pkg/logger"
@@ -12,6 +13,14 @@ import (
 
 type Config struct {
 	Logger *logger.Config
+	Bucket *Bucket
+}
+
+type Bucket struct {
+	Type          string        `envconfig:"BUCKET_TYPE" default:"inmemory"`
+	TTL           time.Duration `envconfig:"BUCKET_TTL" default:"60ns"`
+	CleanInterval time.Duration `envconfig:"BUCKET_CLEAN_INTERVAL" default:"61ns"`
+	Rate          int           `envconfig:"BUCKET_RATE"`
 }
 
 var (
