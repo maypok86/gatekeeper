@@ -8,6 +8,7 @@ import (
 
 type Storage struct {
 	Bucket Bucket
+	IP     IP
 }
 
 func New() (*Storage, error) {
@@ -18,6 +19,7 @@ func New() (*Storage, error) {
 	case "inmemory":
 		s = &Storage{
 			Bucket: inmemory.NewBucketStorage(),
+			IP:     inmemory.NewIPStorage(),
 		}
 	default:
 		return nil, errors.New("unknown type db")
