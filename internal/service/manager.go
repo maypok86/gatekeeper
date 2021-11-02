@@ -9,6 +9,7 @@ import (
 
 type Manager struct {
 	Bucket Bucket
+	IP     IP
 }
 
 func NewManager(ctx context.Context, st *storage.Storage) (*Manager, error) {
@@ -17,5 +18,6 @@ func NewManager(ctx context.Context, st *storage.Storage) (*Manager, error) {
 	}
 	return &Manager{
 		Bucket: NewBucket(ctx, st.Bucket),
+		IP:     NewIP(ctx, st.IP),
 	}, nil
 }

@@ -2,19 +2,11 @@ package inmemory
 
 import (
 	"context"
-	"fmt"
 	"net"
 	"sort"
-	"strings"
 	"sync"
 
 	"github.com/maypok86/gatekeeper/pkg/logger"
-	"github.com/pkg/errors"
-)
-
-var (
-	ErrInvalidIpv4Address = errors.New("invalid ip address")
-	ErrInvalidIpv4Subnet  = errors.New("invalid ip subnet")
 )
 
 type IPStorage struct {
@@ -30,70 +22,47 @@ func NewIPStorage() *IPStorage {
 	}
 }
 
-func (is *IPStorage) Contains(ctx context.Context, clientIP string) (bool, error) {
+func (is *IPStorage) Contains(ctx context.Context, ip net.IP) bool {
 	select {
 	case <-ctx.Done():
-		logger.Warn("client ip contains cancel: ", clientIP)
-		return false, nil
+		logger.Warn("client ip contains cancel: ", ip.String())
+		return false
 	default:
-		ip := net.ParseIP(clientIP)
-		if ip.To4() == nil {
-			return false, fmt.Errorf("%w:%s is not valid ipv4 address", ErrInvalidIpv4Address, clientIP)
-		}
 		is.mutex.Lock()
 		defer is.mutex.Unlock()
 
-		if _, ok := is.ipSet[clientIP]; ok {
-			return true, nil
+		if _, ok := is.ipSet[ip.String()]; ok {
+			return true
 		}
 		for _, subnet := range is.subnetMap {
 			if subnet.Contains(ip) {
-				return true, nil
+				return true
 			}
 		}
-		return false, nil
+		return false
 	}
 }
 
-func (is *IPStorage) Add(ctx context.Context, ipOrSubnet string) error {
+func (is *IPStorage) AddIP(ctx context.Context, ip net.IP) {
 	select {
 	case <-ctx.Done():
-		logger.Warn("Add ip or subnet cancel: ", ipOrSubnet)
-		return nil
+		logger.Warn("Add ip cancel: ", ip.String())
 	default:
-		if isSubnet(ipOrSubnet) {
-			return is.addSubnet(ipOrSubnet)
-		}
-		return is.addIP(ipOrSubnet)
+		is.mutex.Lock()
+		defer is.mutex.Unlock()
+		is.ipSet[ip.String()] = struct{}{}
 	}
 }
 
-func isSubnet(ipOrSubnet string) bool {
-	return strings.Contains(ipOrSubnet, "/")
-}
-
-func (is *IPStorage) addIP(clientIP string) error {
-	ip := net.ParseIP(clientIP)
-	if ip.To4() == nil {
-		return fmt.Errorf("%w:%s is not valid ipv4 address", ErrInvalidIpv4Address, clientIP)
+func (is *IPStorage) AddSubnet(ctx context.Context, subnet *net.IPNet) {
+	select {
+	case <-ctx.Done():
+		logger.Warn("Add subnet cancel: ", subnet.String())
+	default:
+		is.mutex.Lock()
+		defer is.mutex.Unlock()
+		is.subnetMap[subnet.String()] = subnet
 	}
-
-	is.mutex.Lock()
-	defer is.mutex.Unlock()
-	is.ipSet[clientIP] = struct{}{}
-	return nil
-}
-
-func (is *IPStorage) addSubnet(subnet string) error {
-	_, cidr, err := net.ParseCIDR(subnet)
-	if err != nil {
-		return fmt.Errorf("%w: is not valid ipv4 subnet %s,  %s", ErrInvalidIpv4Subnet, subnet, err)
-	}
-
-	is.mutex.Lock()
-	defer is.mutex.Unlock()
-	is.subnetMap[subnet] = cidr
-	return nil
 }
 
 func (is *IPStorage) GetAll(ctx context.Context) []string {
@@ -114,17 +83,24 @@ func (is *IPStorage) GetAll(ctx context.Context) []string {
 	}
 }
 
-func (is *IPStorage) Remove(ctx context.Context, ipOrSubnet string) {
+func (is *IPStorage) RemoveIP(ctx context.Context, ip string) {
 	select {
 	case <-ctx.Done():
-		logger.Warn("Remove ip or subnet cancel: ", ipOrSubnet)
+		logger.Warn("Remove ip cancel: ", ip)
 	default:
 		is.mutex.Lock()
 		defer is.mutex.Unlock()
-		if isSubnet(ipOrSubnet) {
-			delete(is.subnetMap, ipOrSubnet)
-		} else {
-			delete(is.ipSet, ipOrSubnet)
-		}
+		delete(is.ipSet, ip)
+	}
+}
+
+func (is *IPStorage) RemoveSubnet(ctx context.Context, subnet string) {
+	select {
+	case <-ctx.Done():
+		logger.Warn("Remove subnet cancel: ", subnet)
+	default:
+		is.mutex.Lock()
+		defer is.mutex.Unlock()
+		delete(is.subnetMap, subnet)
 	}
 }

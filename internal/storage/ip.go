@@ -1,10 +1,15 @@
 package storage
 
-import "context"
+import (
+	"context"
+	"net"
+)
 
 type IP interface {
-	Contains(ctx context.Context, ip string) (bool, error)
-	Add(ctx context.Context, ipOrSubnet string) error
+	Contains(ctx context.Context, ip net.IP) bool
+	AddIP(ctx context.Context, ip net.IP)
+	AddSubnet(ctx context.Context, subnet *net.IPNet)
 	GetAll(ctx context.Context) []string
-	Remove(ctx context.Context, ipOrSubnet string)
+	RemoveIP(ctx context.Context, ip string)
+	RemoveSubnet(ctx context.Context, subnet string)
 }
