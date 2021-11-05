@@ -41,8 +41,15 @@ cover: test ## Run all the tests and opens the coverage report
 ci: lint test ## Run all the tests and code checks
 
 .PHONY: generate
-generate: ## Generate all mocks
+generate: ## Generate code
 	go generate ./...
+	rm -rf internal/api/grpc/pb
+	mkdir -p internal/api/grpc/pb
+	protoc \
+        		--proto_path=api/ \
+        		--go_out=internal/api/grpc/pb \
+        		--go-grpc_out=internal/api/grpc/pb \
+        		api/gatekeeper.proto
 
 .PHONY: clean
 clean: ## Remove temporary files

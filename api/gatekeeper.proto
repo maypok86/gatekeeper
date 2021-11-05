@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "./;apipb";
+
+service GatekeeperService {
+  rpc Check (AuthRequest) returns (AuthResponse) {}
+}
+
+message AuthRequest {
+  string login = 1;
+  string password = 2;
+  string ip = 3;
+}
+
+message AuthResponse {
+  bool ok = 1;
+}
