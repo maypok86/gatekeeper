@@ -5,13 +5,12 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/maypok86/gatekeeper/pkg/logger"
 	"github.com/stretchr/testify/require"
 )
 
 func TestConfig_Get(t *testing.T) {
 	testConfig := &Config{
-		Logger: &logger.Config{
+		Logger: &Logger{
 			Level: "warn",
 			File:  "test.log",
 		},

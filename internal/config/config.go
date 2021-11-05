@@ -8,12 +8,16 @@ import (
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
-	"github.com/maypok86/gatekeeper/pkg/logger"
 )
 
 type Config struct {
-	Logger *logger.Config
+	Logger *Logger
 	Bucket *Bucket
+}
+
+type Logger struct {
+	Level string `envconfig:"LOGGER_LEVEL" default:"info"`
+	File  string `envconfig:"LOGGER_FILE" default:"develop.log"`
 }
 
 type Bucket struct {

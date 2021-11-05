@@ -22,11 +22,11 @@ var versionCmd = &cobra.Command{
 	Short: "Show version gk",
 	Long:  `Show version Gatekeeper cli`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Print(Format(version, buildDate))
+		fmt.Print(format(version, buildDate))
 	},
 }
 
-func Format(version, buildDate string) string {
+func format(version, buildDate string) string {
 	version = strings.TrimPrefix(version, "v")
 
 	var dateStr string

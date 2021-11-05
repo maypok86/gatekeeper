@@ -6,7 +6,7 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/maypok86/gatekeeper/pkg/logger"
+	"go.uber.org/zap"
 )
 
 type IPStorage struct {
@@ -25,7 +25,7 @@ func NewIPStorage() *IPStorage {
 func (is *IPStorage) Contains(ctx context.Context, ip net.IP) bool {
 	select {
 	case <-ctx.Done():
-		logger.Warn("client ip contains cancel: ", ip.String())
+		zap.L().Warn("client ip contains cancel: ", zap.String("ip", ip.String()))
 		return false
 	default:
 		is.mutex.Lock()
@@ -46,7 +46,7 @@ func (is *IPStorage) Contains(ctx context.Context, ip net.IP) bool {
 func (is *IPStorage) AddIP(ctx context.Context, ip net.IP) {
 	select {
 	case <-ctx.Done():
-		logger.Warn("Add ip cancel: ", ip.String())
+		zap.L().Warn("Add ip cancel: ", zap.String("ip", ip.String()))
 	default:
 		is.mutex.Lock()
 		defer is.mutex.Unlock()
@@ -57,7 +57,7 @@ func (is *IPStorage) AddIP(ctx context.Context, ip net.IP) {
 func (is *IPStorage) AddSubnet(ctx context.Context, subnet *net.IPNet) {
 	select {
 	case <-ctx.Done():
-		logger.Warn("Add subnet cancel: ", subnet.String())
+		zap.L().Warn("Add subnet cancel: ", zap.String("subnet", subnet.String()))
 	default:
 		is.mutex.Lock()
 		defer is.mutex.Unlock()
@@ -68,7 +68,7 @@ func (is *IPStorage) AddSubnet(ctx context.Context, subnet *net.IPNet) {
 func (is *IPStorage) GetAll(ctx context.Context) []string {
 	select {
 	case <-ctx.Done():
-		logger.Warn("Get all ips cancel")
+		zap.L().Warn("Get all ips cancel")
 		return []string{}
 	default:
 		ips := make([]string, 0)
@@ -86,7 +86,7 @@ func (is *IPStorage) GetAll(ctx context.Context) []string {
 func (is *IPStorage) RemoveIP(ctx context.Context, ip string) {
 	select {
 	case <-ctx.Done():
-		logger.Warn("Remove ip cancel: ", ip)
+		zap.L().Warn("Remove ip cancel: ", zap.String("ip", ip))
 	default:
 		is.mutex.Lock()
 		defer is.mutex.Unlock()
@@ -97,7 +97,7 @@ func (is *IPStorage) RemoveIP(ctx context.Context, ip string) {
 func (is *IPStorage) RemoveSubnet(ctx context.Context, subnet string) {
 	select {
 	case <-ctx.Done():
-		logger.Warn("Remove subnet cancel: ", subnet)
+		zap.L().Warn("Remove subnet cancel: ", zap.String("subnet", subnet))
 	default:
 		is.mutex.Lock()
 		defer is.mutex.Unlock()

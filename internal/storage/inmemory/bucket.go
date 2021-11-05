@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/maypok86/gatekeeper/internal/config"
-	"github.com/maypok86/gatekeeper/pkg/logger"
+	"go.uber.org/zap"
 	"golang.org/x/time/rate"
 )
 
@@ -42,7 +42,7 @@ func NewBucketStorage(cfg *config.Bucket) *BucketStorage {
 func (ib *BucketStorage) Allow(ctx context.Context, name string) bool {
 	select {
 	case <-ctx.Done():
-		logger.Warn("bucket allow cancel: ", name)
+		zap.L().Warn("bucket allow cancel: ", zap.String("name", name))
 		return false
 	default:
 		return ib.getBucket(name).Allow()
@@ -68,7 +68,7 @@ func (ib *BucketStorage) getBucket(name string) *bucket {
 func (ib *BucketStorage) Remove(ctx context.Context, name string) {
 	select {
 	case <-ctx.Done():
-		logger.Warn("bucket remove cancel: ", name)
+		zap.L().Warn("bucket remove cancel: ", zap.String("name", name))
 	default:
 		ib.mutex.Lock()
 		defer ib.mutex.Unlock()
@@ -97,7 +97,7 @@ func (ib *BucketStorage) clean() {
 func (ib *BucketStorage) HasBucket(ctx context.Context, name string) bool {
 	select {
 	case <-ctx.Done():
-		logger.Warn("bucket has name cancel: ", name)
+		zap.L().Warn("bucket has name cancel: ", zap.String("name", name))
 		return false
 	default:
 		ib.mutex.Lock()

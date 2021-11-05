@@ -5,17 +5,19 @@ import (
 	"os"
 	"testing"
 
+	"github.com/maypok86/gatekeeper/internal/config"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/zap"
 )
 
 func Test_Logger(t *testing.T) {
 	t.Run("logging", func(t *testing.T) {
 		filename := "develop.log"
-		Configure(&Config{
+		Configure(&config.Logger{
 			File:  filename,
 			Level: "info",
 		})
-		Info("logger construction succeeded")
+		zap.L().Info("logger construction succeeded")
 
 		file, err := ioutil.ReadFile(filename)
 		require.NoError(t, err)

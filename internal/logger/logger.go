@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/maypok86/gatekeeper/internal/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -20,11 +21,6 @@ var levelMap = map[string]zapcore.Level{
 	"fatal":  zapcore.FatalLevel,
 }
 
-type Config struct {
-	Level string `envconfig:"LOGGER_LEVEL" default:"info"`
-	File  string `envconfig:"LOGGER_FILE" default:"develop.log"`
-}
-
 func getLoggerLevel(lvl string) zapcore.Level {
 	if level, ok := levelMap[lvl]; ok {
 		return level
@@ -32,8 +28,7 @@ func getLoggerLevel(lvl string) zapcore.Level {
 	return zapcore.InfoLevel
 }
 
-// Configure logger.
-func Configure(config *Config) {
+func Configure(config *config.Logger) {
 	level := getLoggerLevel(strings.ToLower(config.Level))
 
 	syncWriter := zapcore.AddSync(&lumberjack.Logger{
@@ -50,7 +45,5 @@ func Configure(config *Config) {
 
 	multiWriter := zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(syncWriter))
 	core := zapcore.NewCore(zapcore.NewConsoleEncoder(encoder), multiWriter, zap.NewAtomicLevelAt(level))
-	logger = zap.New(core).Sugar()
-
-	Info("Logger init success.")
+	zap.ReplaceGlobals(zap.New(core))
 }
