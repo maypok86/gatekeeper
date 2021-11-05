@@ -18,7 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GatekeeperServiceClient interface {
-	Check(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
+	Allow(ctx context.Context, in *AllowRequest, opts ...grpc.CallOption) (*AllowResponse, error)
 }
 
 type gatekeeperServiceClient struct {
@@ -29,9 +29,9 @@ func NewGatekeeperServiceClient(cc grpc.ClientConnInterface) GatekeeperServiceCl
 	return &gatekeeperServiceClient{cc}
 }
 
-func (c *gatekeeperServiceClient) Check(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error) {
-	out := new(AuthResponse)
-	err := c.cc.Invoke(ctx, "/api.GatekeeperService/Check", in, out, opts...)
+func (c *gatekeeperServiceClient) Allow(ctx context.Context, in *AllowRequest, opts ...grpc.CallOption) (*AllowResponse, error) {
+	out := new(AllowResponse)
+	err := c.cc.Invoke(ctx, "/api.GatekeeperService/Allow", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func (c *gatekeeperServiceClient) Check(ctx context.Context, in *AuthRequest, op
 // All implementations must embed UnimplementedGatekeeperServiceServer
 // for forward compatibility
 type GatekeeperServiceServer interface {
-	Check(context.Context, *AuthRequest) (*AuthResponse, error)
+	Allow(context.Context, *AllowRequest) (*AllowResponse, error)
 	mustEmbedUnimplementedGatekeeperServiceServer()
 }
 
@@ -50,8 +50,8 @@ type GatekeeperServiceServer interface {
 type UnimplementedGatekeeperServiceServer struct {
 }
 
-func (UnimplementedGatekeeperServiceServer) Check(context.Context, *AuthRequest) (*AuthResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Check not implemented")
+func (UnimplementedGatekeeperServiceServer) Allow(context.Context, *AllowRequest) (*AllowResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Allow not implemented")
 }
 func (UnimplementedGatekeeperServiceServer) mustEmbedUnimplementedGatekeeperServiceServer() {}
 
@@ -66,20 +66,20 @@ func RegisterGatekeeperServiceServer(s grpc.ServiceRegistrar, srv GatekeeperServ
 	s.RegisterService(&GatekeeperService_ServiceDesc, srv)
 }
 
-func _GatekeeperService_Check_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AuthRequest)
+func _GatekeeperService_Allow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AllowRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GatekeeperServiceServer).Check(ctx, in)
+		return srv.(GatekeeperServiceServer).Allow(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.GatekeeperService/Check",
+		FullMethod: "/api.GatekeeperService/Allow",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GatekeeperServiceServer).Check(ctx, req.(*AuthRequest))
+		return srv.(GatekeeperServiceServer).Allow(ctx, req.(*AllowRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -92,8 +92,8 @@ var GatekeeperService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*GatekeeperServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Check",
-			Handler:    _GatekeeperService_Check_Handler,
+			MethodName: "Allow",
+			Handler:    _GatekeeperService_Allow_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

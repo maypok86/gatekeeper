@@ -44,11 +44,12 @@ func TestIPService_Contains_Found(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			service := NewIP(context.Background(), inmemory.NewIPStorage())
+			ctx := context.Background()
 			for _, ip := range test.ips {
-				err := service.Add(ip)
+				err := service.Add(ctx, ip)
 				require.NoError(t, err, "Unable add ip/subnet for test data")
 			}
-			found, err := service.Contains(test.search)
+			found, err := service.Contains(ctx, test.search)
 			require.NoError(t, err, "Error on check ip/subnet")
 			require.True(t, found)
 		})
@@ -80,11 +81,12 @@ func TestIPService_Contains_NotFound(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			service := NewIP(context.Background(), inmemory.NewIPStorage())
+			ctx := context.Background()
 			for _, ip := range test.ips {
-				err := service.Add(ip)
+				err := service.Add(ctx, ip)
 				require.NoError(t, err, "Unable add ip/subnet for test data")
 			}
-			found, err := service.Contains(test.search)
+			found, err := service.Contains(ctx, test.search)
 			require.NoError(t, err, "Error on check ip/subnet")
 			require.False(t, found)
 		})
@@ -93,36 +95,41 @@ func TestIPService_Contains_NotFound(t *testing.T) {
 
 func TestIPService_Contains_CheckInvalidIP(t *testing.T) {
 	service := NewIP(context.Background(), inmemory.NewIPStorage())
-	_, err := service.Contains("192.168.1")
+	ctx := context.Background()
+	_, err := service.Contains(ctx, "192.168.1")
 	require.ErrorIs(t, err, ErrInvalidIpv4Address)
 }
 
 func TestIPService_Add_InvalidIP(t *testing.T) {
 	service := NewIP(context.Background(), inmemory.NewIPStorage())
-	err := service.Add("192.168.1.")
+	ctx := context.Background()
+	err := service.Add(ctx, "192.168.1.")
 	require.ErrorIs(t, err, ErrInvalidIpv4Address)
 }
 
 func TestIPService_Add_InvalidSubnet(t *testing.T) {
 	service := NewIP(context.Background(), inmemory.NewIPStorage())
-	err := service.Add("192.168.1./50")
+	ctx := context.Background()
+	err := service.Add(ctx, "192.168.1./50")
 	require.ErrorIs(t, err, ErrInvalidIpv4Subnet)
 }
 
 func TestIPService_GetAll_Empty(t *testing.T) {
 	service := NewIP(context.Background(), inmemory.NewIPStorage())
-	require.Len(t, service.GetAll(), 0)
+	ctx := context.Background()
+	require.Len(t, service.GetAll(ctx), 0)
 }
 
 func TestIPService_GetAll_NotEmpty(t *testing.T) {
 	service := NewIP(context.Background(), inmemory.NewIPStorage())
 	ips := []string{"192.168.1.12", "10.10.0.0/24"}
 	sort.Strings(ips)
+	ctx := context.Background()
 	for _, ip := range ips {
-		err := service.Add(ip)
+		err := service.Add(ctx, ip)
 		require.NoError(t, err)
 	}
-	require.Equal(t, ips, service.GetAll())
+	require.Equal(t, ips, service.GetAll(ctx))
 }
 
 func TestIPService_Remove_Exists(t *testing.T) {
@@ -145,16 +152,17 @@ func TestIPService_Remove_Exists(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			service := NewIP(context.Background(), inmemory.NewIPStorage())
-			err := service.Add(test.tableIP)
+			ctx := context.Background()
+			err := service.Add(ctx, test.tableIP)
 			require.NoError(t, err)
 
-			f, err := service.Contains(test.searchIP)
+			f, err := service.Contains(ctx, test.searchIP)
 			require.NoError(t, err)
 			require.True(t, f)
 
-			service.Remove(test.tableIP)
+			service.Remove(ctx, test.tableIP)
 
-			f, err = service.Contains(test.searchIP)
+			f, err = service.Contains(ctx, test.searchIP)
 			require.NoError(t, err)
 			require.False(t, f)
 		})
@@ -178,8 +186,9 @@ func TestIPService_Remove_NotExists(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			service := NewIP(context.Background(), inmemory.NewIPStorage())
+			ctx := context.Background()
 			require.NotPanics(t, func() {
-				service.Remove(test.tableIP)
+				service.Remove(ctx, test.tableIP)
 			})
 		})
 	}

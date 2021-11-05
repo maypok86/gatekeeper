@@ -5,15 +5,15 @@ package api;
 option go_package = "./;apipb";
 
 service GatekeeperService {
-  rpc Check (AuthRequest) returns (AuthResponse) {}
+  rpc Allow(AllowRequest) returns (AllowResponse) {}
 }
 
-message AuthRequest {
+message AllowRequest {
   string login = 1;
   string password = 2;
   string ip = 3;
 }
 
-message AuthResponse {
+message AllowResponse {
   bool ok = 1;
 }
