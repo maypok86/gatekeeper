@@ -10,17 +10,17 @@ import (
 	"google.golang.org/grpc"
 )
 
-var rootWhitelistCmd = &cobra.Command{
-	Use:   "whitelist",
-	Short: "Add subnet to whitelist or remove subnet from whitelist",
-	Long:  `Add ip/subnet to whitelist or remove ip/subnet from whitelist`,
+var rootBlacklistCmd = &cobra.Command{
+	Use:   "blacklist",
+	Short: "Add subnet to blacklist or remove subnet from blacklist",
+	Long:  `Add ip/subnet to blacklist or remove ip/subnet from blacklist`,
 }
 
-var whitelistAddCmd = &cobra.Command{
+var blacklistAddCmd = &cobra.Command{
 	Use:     "add",
-	Short:   "Add ip/subnet to whitelist",
-	Long:    `Add ip/subnet to whitelist`,
-	Example: "gk whitelist add <ip/subnet>",
+	Short:   "Add ip/subnet to blacklist",
+	Long:    `Add ip/subnet to blacklist`,
+	Example: "gk blacklist add <ip/subnet>",
 	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		conn, err := grpc.Dial(serverURL, grpc.WithInsecure(), grpc.WithBlock())
@@ -35,21 +35,21 @@ var whitelistAddCmd = &cobra.Command{
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
 		subnet := args[0]
-		response, err := client.WhitelistAdd(ctx, &apipb.WhitelistAddRequest{
+		response, err := client.BlacklistAdd(ctx, &apipb.BlacklistAddRequest{
 			Subnet: subnet,
 		})
 		if err != nil {
-			log.Fatalf("could not add to whitelist: %v", err)
+			log.Fatalf("could not add to blacklist: %v", err)
 		}
 		log.Printf("Success: %t", response.Ok)
 	},
 }
 
-var whitelistRemoveCmd = &cobra.Command{
+var blacklistRemoveCmd = &cobra.Command{
 	Use:     "remove",
-	Short:   "Remove ip/subnet from whitelist",
-	Long:    `Remove ip/subnet from whitelist`,
-	Example: "gk whitelist remove <ip/subnet>",
+	Short:   "Remove ip/subnet from blacklist",
+	Long:    `Remove ip/subnet from blacklist`,
+	Example: "gk blacklist remove <ip/subnet>",
 	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		conn, err := grpc.Dial(serverURL, grpc.WithInsecure(), grpc.WithBlock())
@@ -64,18 +64,18 @@ var whitelistRemoveCmd = &cobra.Command{
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
 		subnet := args[0]
-		response, err := client.WhitelistRemove(ctx, &apipb.WhitelistRemoveRequest{
+		response, err := client.BlacklistRemove(ctx, &apipb.BlacklistRemoveRequest{
 			Subnet: subnet,
 		})
 		if err != nil {
-			log.Fatalf("could not remove from whitelist: %v", err)
+			log.Fatalf("could not remove from blacklist: %v", err)
 		}
 		log.Printf("Success: %t", response.Ok)
 	},
 }
 
 func init() {
-	rootWhitelistCmd.AddCommand(whitelistAddCmd)
-	rootWhitelistCmd.AddCommand(whitelistRemoveCmd)
-	rootCmd.AddCommand(rootWhitelistCmd)
+	rootBlacklistCmd.AddCommand(blacklistAddCmd)
+	rootBlacklistCmd.AddCommand(blacklistRemoveCmd)
+	rootCmd.AddCommand(rootBlacklistCmd)
 }
