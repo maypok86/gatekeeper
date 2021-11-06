@@ -10,7 +10,8 @@ import (
 	"go.uber.org/zap"
 )
 
-type Server struct {
+type Service struct {
+	apipb.UnimplementedGatekeeperServiceServer
 	loginService     service.Bucket
 	passwordService  service.Bucket
 	ipService        service.Bucket
@@ -18,7 +19,7 @@ type Server struct {
 	blacklistService service.IP
 }
 
-func NewServer(ctx context.Context) (*Server, error) {
+func NewService(ctx context.Context) (*Service, error) {
 	cfg := config.Get()
 
 	loginService, err := service.NewBucket(ctx, cfg, cfg.RateLogin)
@@ -46,7 +47,7 @@ func NewServer(ctx context.Context) (*Server, error) {
 		return nil, err
 	}
 
-	return &Server{
+	return &Service{
 		loginService:     loginService,
 		passwordService:  passwordService,
 		ipService:        ipService,
@@ -55,7 +56,7 @@ func NewServer(ctx context.Context) (*Server, error) {
 	}, nil
 }
 
-func (s *Server) Allow(ctx context.Context, request *apipb.AllowRequest) (*apipb.AllowResponse, error) {
+func (s *Service) Allow(ctx context.Context, request *apipb.AllowRequest) (*apipb.AllowResponse, error) {
 	login := request.Login
 	pwd, err := password.HashPassword(request.Password)
 	if err != nil {
