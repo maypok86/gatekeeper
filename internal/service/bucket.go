@@ -20,13 +20,13 @@ type bucketService struct {
 	bucket storage.Bucket
 }
 
-func NewBucket(ctx context.Context, cfg *config.Config) (Bucket, error) {
+func NewBucket(ctx context.Context, cfg *config.Config, rate int) (Bucket, error) {
 	var bs *bucketService
 	switch cfg.DBType {
 	case "inmemory":
 		bs = &bucketService{
 			ctx:    ctx,
-			bucket: inmemory.NewBucketStorage(cfg.Bucket),
+			bucket: inmemory.NewBucketStorage(config.GetBucketByRate(rate)),
 		}
 	default:
 		return nil, errors.New("unknown type db")

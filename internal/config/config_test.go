@@ -10,15 +10,15 @@ import (
 
 func TestConfig_Get(t *testing.T) {
 	testConfig := &Config{
-		DBType: "inmemory",
+		DBType:       "inmemory",
+		Host:         "0.0.0.1",
+		Port:         "50050",
+		RateLogin:    11,
+		RatePassword: 101,
+		RateIP:       1001,
 		Logger: &Logger{
 			Level: "warn",
 			File:  "test.log",
-		},
-		Bucket: &Bucket{
-			TTL:           61,
-			CleanInterval: 62,
-			Rate:          20,
 		},
 	}
 
@@ -28,11 +28,15 @@ func TestConfig_Get(t *testing.T) {
 	require.NoError(t, err)
 	err = os.Setenv("DB_TYPE", testConfig.DBType)
 	require.NoError(t, err)
-	err = os.Setenv("BUCKET_TTL", testConfig.Bucket.TTL.String())
+	err = os.Setenv("HOST", testConfig.Host)
 	require.NoError(t, err)
-	err = os.Setenv("BUCKET_CLEAN_INTERVAL", testConfig.Bucket.CleanInterval.String())
+	err = os.Setenv("PORT", testConfig.Port)
 	require.NoError(t, err)
-	err = os.Setenv("BUCKET_RATE", strconv.Itoa(testConfig.Bucket.Rate))
+	err = os.Setenv("RATE_LOGIN", strconv.Itoa(testConfig.RateLogin))
+	require.NoError(t, err)
+	err = os.Setenv("RATE_PASSWORD", strconv.Itoa(testConfig.RatePassword))
+	require.NoError(t, err)
+	err = os.Setenv("RATE_IP", strconv.Itoa(testConfig.RateIP))
 	require.NoError(t, err)
 
 	cfg := Get()

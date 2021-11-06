@@ -11,9 +11,13 @@ import (
 )
 
 type Config struct {
-	DBType string `envconfig:"DB_TYPE" default:"inmemory"`
-	Logger *Logger
-	Bucket *Bucket
+	DBType       string `envconfig:"DB_TYPE" default:"inmemory"`
+	Host         string `envconfig:"HOST" default:"0.0.0.0"`
+	Port         string `envconfig:"PORT" default:"50051"`
+	RateLogin    int    `envconfig:"RATE_LOGIN" default:"10"`
+	RatePassword int    `envconfig:"RATE_PASSWORD" default:"100"`
+	RateIP       int    `envconfig:"RATE_IP" default:"1000"`
+	Logger       *Logger
 }
 
 type Logger struct {
@@ -22,9 +26,9 @@ type Logger struct {
 }
 
 type Bucket struct {
-	TTL           time.Duration `envconfig:"BUCKET_TTL" default:"60ns"`
-	CleanInterval time.Duration `envconfig:"BUCKET_CLEAN_INTERVAL" default:"61ns"`
-	Rate          int           `envconfig:"BUCKET_RATE"`
+	TTL           time.Duration
+	CleanInterval time.Duration
+	Rate          int
 }
 
 const (

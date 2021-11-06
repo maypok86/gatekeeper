@@ -2,12 +2,12 @@ package grpc
 
 import (
 	"context"
-	apipb "github.com/maypok86/gatekeeper/internal/api/grpc/pb"
-	"github.com/maypok86/gatekeeper/pkg/password"
-	"go.uber.org/zap"
 
+	apipb "github.com/maypok86/gatekeeper/internal/api/grpc/pb"
 	"github.com/maypok86/gatekeeper/internal/config"
 	"github.com/maypok86/gatekeeper/internal/service"
+	"github.com/maypok86/gatekeeper/pkg/password"
+	"go.uber.org/zap"
 )
 
 type Server struct {
@@ -21,17 +21,17 @@ type Server struct {
 func NewServer(ctx context.Context) (*Server, error) {
 	cfg := config.Get()
 
-	loginService, err := service.NewBucket(ctx, cfg)
+	loginService, err := service.NewBucket(ctx, cfg, cfg.RateLogin)
 	if err != nil {
 		return nil, err
 	}
 
-	passwordService, err := service.NewBucket(ctx, cfg)
+	passwordService, err := service.NewBucket(ctx, cfg, cfg.RatePassword)
 	if err != nil {
 		return nil, err
 	}
 
-	ipService, err := service.NewBucket(ctx, cfg)
+	ipService, err := service.NewBucket(ctx, cfg, cfg.RateIP)
 	if err != nil {
 		return nil, err
 	}
