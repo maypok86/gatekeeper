@@ -22,6 +22,8 @@ type GatekeeperServiceClient interface {
 	Allow(ctx context.Context, in *AllowRequest, opts ...grpc.CallOption) (*AllowResponse, error)
 	ResetLogin(ctx context.Context, in *ResetLoginRequest, opts ...grpc.CallOption) (*ResetLoginResponse, error)
 	ResetIP(ctx context.Context, in *ResetIPRequest, opts ...grpc.CallOption) (*ResetIPResponse, error)
+	WhitelistAdd(ctx context.Context, in *WhitelistAddRequest, opts ...grpc.CallOption) (*WhitelistAddResponse, error)
+	WhitelistRemove(ctx context.Context, in *WhitelistRemoveRequest, opts ...grpc.CallOption) (*WhitelistRemoveResponse, error)
 }
 
 type gatekeeperServiceClient struct {
@@ -59,6 +61,24 @@ func (c *gatekeeperServiceClient) ResetIP(ctx context.Context, in *ResetIPReques
 	return out, nil
 }
 
+func (c *gatekeeperServiceClient) WhitelistAdd(ctx context.Context, in *WhitelistAddRequest, opts ...grpc.CallOption) (*WhitelistAddResponse, error) {
+	out := new(WhitelistAddResponse)
+	err := c.cc.Invoke(ctx, "/api.GatekeeperService/WhitelistAdd", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gatekeeperServiceClient) WhitelistRemove(ctx context.Context, in *WhitelistRemoveRequest, opts ...grpc.CallOption) (*WhitelistRemoveResponse, error) {
+	out := new(WhitelistRemoveResponse)
+	err := c.cc.Invoke(ctx, "/api.GatekeeperService/WhitelistRemove", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GatekeeperServiceServer is the server API for GatekeeperService service.
 // All implementations must embed UnimplementedGatekeeperServiceServer
 // for forward compatibility
@@ -66,6 +86,8 @@ type GatekeeperServiceServer interface {
 	Allow(context.Context, *AllowRequest) (*AllowResponse, error)
 	ResetLogin(context.Context, *ResetLoginRequest) (*ResetLoginResponse, error)
 	ResetIP(context.Context, *ResetIPRequest) (*ResetIPResponse, error)
+	WhitelistAdd(context.Context, *WhitelistAddRequest) (*WhitelistAddResponse, error)
+	WhitelistRemove(context.Context, *WhitelistRemoveRequest) (*WhitelistRemoveResponse, error)
 	mustEmbedUnimplementedGatekeeperServiceServer()
 }
 
@@ -82,6 +104,14 @@ func (UnimplementedGatekeeperServiceServer) ResetLogin(context.Context, *ResetLo
 
 func (UnimplementedGatekeeperServiceServer) ResetIP(context.Context, *ResetIPRequest) (*ResetIPResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetIP not implemented")
+}
+
+func (UnimplementedGatekeeperServiceServer) WhitelistAdd(context.Context, *WhitelistAddRequest) (*WhitelistAddResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method WhitelistAdd not implemented")
+}
+
+func (UnimplementedGatekeeperServiceServer) WhitelistRemove(context.Context, *WhitelistRemoveRequest) (*WhitelistRemoveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method WhitelistRemove not implemented")
 }
 func (UnimplementedGatekeeperServiceServer) mustEmbedUnimplementedGatekeeperServiceServer() {}
 
@@ -150,6 +180,42 @@ func _GatekeeperService_ResetIP_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GatekeeperService_WhitelistAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(WhitelistAddRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatekeeperServiceServer).WhitelistAdd(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.GatekeeperService/WhitelistAdd",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatekeeperServiceServer).WhitelistAdd(ctx, req.(*WhitelistAddRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GatekeeperService_WhitelistRemove_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(WhitelistRemoveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatekeeperServiceServer).WhitelistRemove(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.GatekeeperService/WhitelistRemove",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatekeeperServiceServer).WhitelistRemove(ctx, req.(*WhitelistRemoveRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GatekeeperService_ServiceDesc is the grpc.ServiceDesc for GatekeeperService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -168,6 +234,14 @@ var GatekeeperService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ResetIP",
 			Handler:    _GatekeeperService_ResetIP_Handler,
+		},
+		{
+			MethodName: "WhitelistAdd",
+			Handler:    _GatekeeperService_WhitelistAdd_Handler,
+		},
+		{
+			MethodName: "WhitelistRemove",
+			Handler:    _GatekeeperService_WhitelistRemove_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -107,3 +107,17 @@ func (s *Service) ResetIP(ctx context.Context, request *apipb.ResetIPRequest) (*
 	}
 	return &apipb.ResetIPResponse{Ok: false}, errors.New("Not found ip")
 }
+
+func (s *Service) WhitelistAdd(ctx context.Context, request *apipb.WhitelistAddRequest) (*apipb.WhitelistAddResponse, error) {
+	if err := s.whitelistService.Add(ctx, request.Subnet); err != nil {
+		return &apipb.WhitelistAddResponse{Ok: false}, err
+	}
+	zap.L().Info("Add in whitelist", zap.String("subnet", request.Subnet))
+	return &apipb.WhitelistAddResponse{Ok: true}, nil
+}
+
+func (s *Service) WhitelistRemove(ctx context.Context, request *apipb.WhitelistRemoveRequest) (*apipb.WhitelistRemoveResponse, error) {
+	s.whitelistService.Remove(ctx, request.Subnet)
+	zap.L().Info("Remove from whitelist", zap.String("subnet", request.Subnet))
+	return &apipb.WhitelistRemoveResponse{Ok: true}, nil
+}
