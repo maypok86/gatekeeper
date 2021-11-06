@@ -15,6 +15,11 @@ setup: ## Install all the build and lint dependencies
 build: ## Build a version
 	go build -v -o $(BIN) -ldflags "$(LDFLAGS)" .
 
+.PHONY: api
+api: build ## Start api server
+	echo -n > develop.log
+	$(BIN) api
+
 .PHONY: version
 version: build ## Build and view project version
 	$(BIN) version
