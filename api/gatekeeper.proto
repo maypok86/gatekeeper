@@ -6,6 +6,8 @@ option go_package = "./;apipb";
 
 service GatekeeperService {
   rpc Allow(AllowRequest) returns (AllowResponse) {}
+  rpc ResetLogin(ResetLoginRequest) returns (ResetLoginResponse) {}
+  rpc ResetIP(ResetIPRequest) returns (ResetIPResponse) {}
 }
 
 message AllowRequest {
@@ -15,5 +17,21 @@ message AllowRequest {
 }
 
 message AllowResponse {
+  bool ok = 1;
+}
+
+message ResetLoginRequest {
+  string login = 1;
+}
+
+message ResetLoginResponse {
+  bool ok = 1;
+}
+
+message ResetIPRequest {
+  string ip = 1;
+}
+
+message ResetIPResponse {
   bool ok = 1;
 }

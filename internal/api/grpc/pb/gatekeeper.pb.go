@@ -131,6 +131,194 @@ func (x *AllowResponse) GetOk() bool {
 	return false
 }
 
+type ResetLoginRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Login string `protobuf:"bytes,1,opt,name=login,proto3" json:"login,omitempty"`
+}
+
+func (x *ResetLoginRequest) Reset() {
+	*x = ResetLoginRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_gatekeeper_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ResetLoginRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResetLoginRequest) ProtoMessage() {}
+
+func (x *ResetLoginRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_gatekeeper_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResetLoginRequest.ProtoReflect.Descriptor instead.
+func (*ResetLoginRequest) Descriptor() ([]byte, []int) {
+	return file_gatekeeper_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ResetLoginRequest) GetLogin() string {
+	if x != nil {
+		return x.Login
+	}
+	return ""
+}
+
+type ResetLoginResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Ok bool `protobuf:"varint,1,opt,name=ok,proto3" json:"ok,omitempty"`
+}
+
+func (x *ResetLoginResponse) Reset() {
+	*x = ResetLoginResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_gatekeeper_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ResetLoginResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResetLoginResponse) ProtoMessage() {}
+
+func (x *ResetLoginResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_gatekeeper_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResetLoginResponse.ProtoReflect.Descriptor instead.
+func (*ResetLoginResponse) Descriptor() ([]byte, []int) {
+	return file_gatekeeper_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ResetLoginResponse) GetOk() bool {
+	if x != nil {
+		return x.Ok
+	}
+	return false
+}
+
+type ResetIPRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Ip string `protobuf:"bytes,1,opt,name=ip,proto3" json:"ip,omitempty"`
+}
+
+func (x *ResetIPRequest) Reset() {
+	*x = ResetIPRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_gatekeeper_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ResetIPRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResetIPRequest) ProtoMessage() {}
+
+func (x *ResetIPRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_gatekeeper_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResetIPRequest.ProtoReflect.Descriptor instead.
+func (*ResetIPRequest) Descriptor() ([]byte, []int) {
+	return file_gatekeeper_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *ResetIPRequest) GetIp() string {
+	if x != nil {
+		return x.Ip
+	}
+	return ""
+}
+
+type ResetIPResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Ok bool `protobuf:"varint,1,opt,name=ok,proto3" json:"ok,omitempty"`
+}
+
+func (x *ResetIPResponse) Reset() {
+	*x = ResetIPResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_gatekeeper_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ResetIPResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResetIPResponse) ProtoMessage() {}
+
+func (x *ResetIPResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_gatekeeper_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResetIPResponse.ProtoReflect.Descriptor instead.
+func (*ResetIPResponse) Descriptor() ([]byte, []int) {
+	return file_gatekeeper_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *ResetIPResponse) GetOk() bool {
+	if x != nil {
+		return x.Ok
+	}
+	return false
+}
+
 var File_gatekeeper_proto protoreflect.FileDescriptor
 
 var file_gatekeeper_proto_rawDesc = []byte{
@@ -142,11 +330,28 @@ var file_gatekeeper_proto_rawDesc = []byte{
 	0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x70, 0x18,
 	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x70, 0x22, 0x1f, 0x0a, 0x0d, 0x41, 0x6c, 0x6c,
 	0x6f, 0x77, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x6f, 0x6b,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x02, 0x6f, 0x6b, 0x32, 0x45, 0x0a, 0x11, 0x47, 0x61,
-	0x74, 0x65, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12,
-	0x30, 0x0a, 0x05, 0x41, 0x6c, 0x6c, 0x6f, 0x77, 0x12, 0x11, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x41,
-	0x6c, 0x6c, 0x6f, 0x77, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x12, 0x2e, 0x61, 0x70,
-	0x69, 0x2e, 0x41, 0x6c, 0x6c, 0x6f, 0x77, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x02, 0x6f, 0x6b, 0x22, 0x29, 0x0a, 0x11, 0x52, 0x65,
+	0x73, 0x65, 0x74, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x14, 0x0a, 0x05, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05,
+	0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x22, 0x24, 0x0a, 0x12, 0x52, 0x65, 0x73, 0x65, 0x74, 0x4c, 0x6f,
+	0x67, 0x69, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x6f,
+	0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x02, 0x6f, 0x6b, 0x22, 0x20, 0x0a, 0x0e, 0x52,
+	0x65, 0x73, 0x65, 0x74, 0x49, 0x50, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a,
+	0x02, 0x69, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x70, 0x22, 0x21, 0x0a,
+	0x0f, 0x52, 0x65, 0x73, 0x65, 0x74, 0x49, 0x50, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x12, 0x0e, 0x0a, 0x02, 0x6f, 0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x02, 0x6f, 0x6b,
+	0x32, 0xbe, 0x01, 0x0a, 0x11, 0x47, 0x61, 0x74, 0x65, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x53,
+	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x30, 0x0a, 0x05, 0x41, 0x6c, 0x6c, 0x6f, 0x77, 0x12,
+	0x11, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x41, 0x6c, 0x6c, 0x6f, 0x77, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x1a, 0x12, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x41, 0x6c, 0x6c, 0x6f, 0x77, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3f, 0x0a, 0x0a, 0x52, 0x65, 0x73, 0x65,
+	0x74, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x12, 0x16, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x52, 0x65, 0x73,
+	0x65, 0x74, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x17,
+	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x52, 0x65, 0x73, 0x65, 0x74, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x36, 0x0a, 0x07, 0x52, 0x65, 0x73,
+	0x65, 0x74, 0x49, 0x50, 0x12, 0x13, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x52, 0x65, 0x73, 0x65, 0x74,
+	0x49, 0x50, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x14, 0x2e, 0x61, 0x70, 0x69, 0x2e,
+	0x52, 0x65, 0x73, 0x65, 0x74, 0x49, 0x50, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
 	0x00, 0x42, 0x0a, 0x5a, 0x08, 0x2e, 0x2f, 0x3b, 0x61, 0x70, 0x69, 0x70, 0x62, 0x62, 0x06, 0x70,
 	0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
@@ -164,18 +369,26 @@ func file_gatekeeper_proto_rawDescGZIP() []byte {
 }
 
 var (
-	file_gatekeeper_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+	file_gatekeeper_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 	file_gatekeeper_proto_goTypes  = []interface{}{
-		(*AllowRequest)(nil),  // 0: api.AllowRequest
-		(*AllowResponse)(nil), // 1: api.AllowResponse
+		(*AllowRequest)(nil),       // 0: api.AllowRequest
+		(*AllowResponse)(nil),      // 1: api.AllowResponse
+		(*ResetLoginRequest)(nil),  // 2: api.ResetLoginRequest
+		(*ResetLoginResponse)(nil), // 3: api.ResetLoginResponse
+		(*ResetIPRequest)(nil),     // 4: api.ResetIPRequest
+		(*ResetIPResponse)(nil),    // 5: api.ResetIPResponse
 	}
 )
 
 var file_gatekeeper_proto_depIdxs = []int32{
 	0, // 0: api.GatekeeperService.Allow:input_type -> api.AllowRequest
-	1, // 1: api.GatekeeperService.Allow:output_type -> api.AllowResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	2, // 1: api.GatekeeperService.ResetLogin:input_type -> api.ResetLoginRequest
+	4, // 2: api.GatekeeperService.ResetIP:input_type -> api.ResetIPRequest
+	1, // 3: api.GatekeeperService.Allow:output_type -> api.AllowResponse
+	3, // 4: api.GatekeeperService.ResetLogin:output_type -> api.ResetLoginResponse
+	5, // 5: api.GatekeeperService.ResetIP:output_type -> api.ResetIPResponse
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -211,6 +424,54 @@ func file_gatekeeper_proto_init() {
 				return nil
 			}
 		}
+		file_gatekeeper_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ResetLoginRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_gatekeeper_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ResetLoginResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_gatekeeper_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ResetIPRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_gatekeeper_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ResetIPResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -218,7 +479,7 @@ func file_gatekeeper_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_gatekeeper_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -7,6 +7,7 @@ import (
 	"github.com/maypok86/gatekeeper/internal/config"
 	"github.com/maypok86/gatekeeper/internal/service"
 	"github.com/maypok86/gatekeeper/pkg/password"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
@@ -87,4 +88,22 @@ func (s *Service) Allow(ctx context.Context, request *apipb.AllowRequest) (*apip
 
 	zap.L().Info("Block allow", zap.String("login", login), zap.String("ip", ip))
 	return &apipb.AllowResponse{Ok: false}, nil
+}
+
+func (s *Service) ResetLogin(ctx context.Context, request *apipb.ResetLoginRequest) (*apipb.ResetLoginResponse, error) {
+	if s.loginService.HasBucket(ctx, request.Login) {
+		zap.L().Info("Reset", zap.String("login", request.Login))
+		s.loginService.Remove(ctx, request.Login)
+		return &apipb.ResetLoginResponse{Ok: true}, nil
+	}
+	return &apipb.ResetLoginResponse{Ok: false}, errors.New("Not found login")
+}
+
+func (s *Service) ResetIP(ctx context.Context, request *apipb.ResetIPRequest) (*apipb.ResetIPResponse, error) {
+	if s.ipService.HasBucket(ctx, request.Ip) {
+		zap.L().Info("Reset", zap.String("ip", request.Ip))
+		s.ipService.Remove(ctx, request.Ip)
+		return &apipb.ResetIPResponse{Ok: true}, nil
+	}
+	return &apipb.ResetIPResponse{Ok: false}, errors.New("Not found ip")
 }

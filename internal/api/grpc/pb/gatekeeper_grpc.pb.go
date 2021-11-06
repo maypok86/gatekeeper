@@ -20,6 +20,8 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GatekeeperServiceClient interface {
 	Allow(ctx context.Context, in *AllowRequest, opts ...grpc.CallOption) (*AllowResponse, error)
+	ResetLogin(ctx context.Context, in *ResetLoginRequest, opts ...grpc.CallOption) (*ResetLoginResponse, error)
+	ResetIP(ctx context.Context, in *ResetIPRequest, opts ...grpc.CallOption) (*ResetIPResponse, error)
 }
 
 type gatekeeperServiceClient struct {
@@ -39,11 +41,31 @@ func (c *gatekeeperServiceClient) Allow(ctx context.Context, in *AllowRequest, o
 	return out, nil
 }
 
+func (c *gatekeeperServiceClient) ResetLogin(ctx context.Context, in *ResetLoginRequest, opts ...grpc.CallOption) (*ResetLoginResponse, error) {
+	out := new(ResetLoginResponse)
+	err := c.cc.Invoke(ctx, "/api.GatekeeperService/ResetLogin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gatekeeperServiceClient) ResetIP(ctx context.Context, in *ResetIPRequest, opts ...grpc.CallOption) (*ResetIPResponse, error) {
+	out := new(ResetIPResponse)
+	err := c.cc.Invoke(ctx, "/api.GatekeeperService/ResetIP", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GatekeeperServiceServer is the server API for GatekeeperService service.
 // All implementations must embed UnimplementedGatekeeperServiceServer
 // for forward compatibility
 type GatekeeperServiceServer interface {
 	Allow(context.Context, *AllowRequest) (*AllowResponse, error)
+	ResetLogin(context.Context, *ResetLoginRequest) (*ResetLoginResponse, error)
+	ResetIP(context.Context, *ResetIPRequest) (*ResetIPResponse, error)
 	mustEmbedUnimplementedGatekeeperServiceServer()
 }
 
@@ -52,6 +74,14 @@ type UnimplementedGatekeeperServiceServer struct{}
 
 func (UnimplementedGatekeeperServiceServer) Allow(context.Context, *AllowRequest) (*AllowResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Allow not implemented")
+}
+
+func (UnimplementedGatekeeperServiceServer) ResetLogin(context.Context, *ResetLoginRequest) (*ResetLoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetLogin not implemented")
+}
+
+func (UnimplementedGatekeeperServiceServer) ResetIP(context.Context, *ResetIPRequest) (*ResetIPResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetIP not implemented")
 }
 func (UnimplementedGatekeeperServiceServer) mustEmbedUnimplementedGatekeeperServiceServer() {}
 
@@ -84,6 +114,42 @@ func _GatekeeperService_Allow_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GatekeeperService_ResetLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetLoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatekeeperServiceServer).ResetLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.GatekeeperService/ResetLogin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatekeeperServiceServer).ResetLogin(ctx, req.(*ResetLoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GatekeeperService_ResetIP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetIPRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatekeeperServiceServer).ResetIP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.GatekeeperService/ResetIP",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatekeeperServiceServer).ResetIP(ctx, req.(*ResetIPRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GatekeeperService_ServiceDesc is the grpc.ServiceDesc for GatekeeperService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -94,6 +160,14 @@ var GatekeeperService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Allow",
 			Handler:    _GatekeeperService_Allow_Handler,
+		},
+		{
+			MethodName: "ResetLogin",
+			Handler:    _GatekeeperService_ResetLogin_Handler,
+		},
+		{
+			MethodName: "ResetIP",
+			Handler:    _GatekeeperService_ResetIP_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
