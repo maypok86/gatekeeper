@@ -112,7 +112,7 @@ func (s *Service) WhitelistAdd(ctx context.Context, request *apipb.WhitelistAddR
 	if err := s.whitelistService.Add(ctx, request.Subnet); err != nil {
 		return &apipb.WhitelistAddResponse{Ok: false}, err
 	}
-	zap.L().Info("Add in whitelist", zap.String("subnet", request.Subnet))
+	zap.L().Info("Add to whitelist", zap.String("subnet", request.Subnet))
 	return &apipb.WhitelistAddResponse{Ok: true}, nil
 }
 
