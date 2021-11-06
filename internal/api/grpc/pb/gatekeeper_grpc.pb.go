@@ -4,6 +4,7 @@ package apipb
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -47,8 +48,7 @@ type GatekeeperServiceServer interface {
 }
 
 // UnimplementedGatekeeperServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedGatekeeperServiceServer struct {
-}
+type UnimplementedGatekeeperServiceServer struct{}
 
 func (UnimplementedGatekeeperServiceServer) Allow(context.Context, *AllowRequest) (*AllowResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Allow not implemented")

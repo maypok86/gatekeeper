@@ -7,10 +7,11 @@
 package apipb
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -162,11 +163,14 @@ func file_gatekeeper_proto_rawDescGZIP() []byte {
 	return file_gatekeeper_proto_rawDescData
 }
 
-var file_gatekeeper_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_gatekeeper_proto_goTypes = []interface{}{
-	(*AllowRequest)(nil),  // 0: api.AllowRequest
-	(*AllowResponse)(nil), // 1: api.AllowResponse
-}
+var (
+	file_gatekeeper_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+	file_gatekeeper_proto_goTypes  = []interface{}{
+		(*AllowRequest)(nil),  // 0: api.AllowRequest
+		(*AllowResponse)(nil), // 1: api.AllowResponse
+	}
+)
+
 var file_gatekeeper_proto_depIdxs = []int32{
 	0, // 0: api.GatekeeperService.Allow:input_type -> api.AllowRequest
 	1, // 1: api.GatekeeperService.Allow:output_type -> api.AllowResponse

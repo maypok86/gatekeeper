@@ -3,7 +3,10 @@ package service
 import (
 	"context"
 
+	"github.com/maypok86/gatekeeper/internal/config"
 	"github.com/maypok86/gatekeeper/internal/storage"
+	"github.com/maypok86/gatekeeper/internal/storage/inmemory"
+	"github.com/pkg/errors"
 )
 
 type Bucket interface {
@@ -17,11 +20,18 @@ type bucketService struct {
 	bucket storage.Bucket
 }
 
-func NewBucket(ctx context.Context, bucket storage.Bucket) Bucket {
-	return &bucketService{
-		ctx:    ctx,
-		bucket: bucket,
+func NewBucket(ctx context.Context, cfg *config.Config) (Bucket, error) {
+	var bs *bucketService
+	switch cfg.DBType {
+	case "inmemory":
+		bs = &bucketService{
+			ctx:    ctx,
+			bucket: inmemory.NewBucketStorage(cfg.Bucket),
+		}
+	default:
+		return nil, errors.New("unknown type db")
 	}
+	return bs, nil
 }
 
 func (bs *bucketService) Allow(ctx context.Context, name string) bool {

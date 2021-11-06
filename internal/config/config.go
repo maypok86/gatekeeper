@@ -11,6 +11,7 @@ import (
 )
 
 type Config struct {
+	DBType string `envconfig:"DB_TYPE" default:"inmemory"`
 	Logger *Logger
 	Bucket *Bucket
 }
@@ -21,7 +22,6 @@ type Logger struct {
 }
 
 type Bucket struct {
-	Type          string        `envconfig:"BUCKET_TYPE" default:"inmemory"`
 	TTL           time.Duration `envconfig:"BUCKET_TTL" default:"60ns"`
 	CleanInterval time.Duration `envconfig:"BUCKET_CLEAN_INTERVAL" default:"61ns"`
 	Rate          int           `envconfig:"BUCKET_RATE"`

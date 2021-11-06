@@ -6,7 +6,9 @@ import (
 	"net"
 	"strings"
 
+	"github.com/maypok86/gatekeeper/internal/config"
 	"github.com/maypok86/gatekeeper/internal/storage"
+	"github.com/maypok86/gatekeeper/internal/storage/inmemory"
 	"github.com/pkg/errors"
 )
 
@@ -27,11 +29,18 @@ type ipService struct {
 	ip  storage.IP
 }
 
-func NewIP(ctx context.Context, ip storage.IP) IP {
-	return &ipService{
-		ctx: ctx,
-		ip:  ip,
+func NewIP(ctx context.Context, cfg *config.Config) (IP, error) {
+	var is *ipService
+	switch cfg.DBType {
+	case "inmemory":
+		is = &ipService{
+			ctx: ctx,
+			ip:  inmemory.NewIPStorage(),
+		}
+	default:
+		return nil, errors.New("unknown type db")
 	}
+	return is, nil
 }
 
 func (is *ipService) Contains(ctx context.Context, clientIP string) (bool, error) {

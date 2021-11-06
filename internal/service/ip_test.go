@@ -5,12 +5,14 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/maypok86/gatekeeper/internal/storage/inmemory"
+	"github.com/maypok86/gatekeeper/internal/config"
 	"github.com/stretchr/testify/require"
 )
 
 func TestNewAllowIPService(t *testing.T) {
-	service := NewIP(context.Background(), inmemory.NewIPStorage())
+	ctx := context.Background()
+	service, err := NewIP(ctx, &config.Config{DBType: "inmemory"})
+	require.NoError(t, err)
 	require.NotNil(t, service)
 }
 
@@ -43,8 +45,9 @@ func TestIPService_Contains_Found(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			service := NewIP(context.Background(), inmemory.NewIPStorage())
 			ctx := context.Background()
+			service, err := NewIP(ctx, &config.Config{DBType: "inmemory"})
+			require.NoError(t, err)
 			for _, ip := range test.ips {
 				err := service.Add(ctx, ip)
 				require.NoError(t, err, "Unable add ip/subnet for test data")
@@ -80,8 +83,9 @@ func TestIPService_Contains_NotFound(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			service := NewIP(context.Background(), inmemory.NewIPStorage())
 			ctx := context.Background()
+			service, err := NewIP(ctx, &config.Config{DBType: "inmemory"})
+			require.NoError(t, err)
 			for _, ip := range test.ips {
 				err := service.Add(ctx, ip)
 				require.NoError(t, err, "Unable add ip/subnet for test data")
@@ -94,37 +98,42 @@ func TestIPService_Contains_NotFound(t *testing.T) {
 }
 
 func TestIPService_Contains_CheckInvalidIP(t *testing.T) {
-	service := NewIP(context.Background(), inmemory.NewIPStorage())
 	ctx := context.Background()
-	_, err := service.Contains(ctx, "192.168.1")
+	service, err := NewIP(ctx, &config.Config{DBType: "inmemory"})
+	require.NoError(t, err)
+	_, err = service.Contains(ctx, "192.168.1")
 	require.ErrorIs(t, err, ErrInvalidIpv4Address)
 }
 
 func TestIPService_Add_InvalidIP(t *testing.T) {
-	service := NewIP(context.Background(), inmemory.NewIPStorage())
 	ctx := context.Background()
-	err := service.Add(ctx, "192.168.1.")
+	service, err := NewIP(ctx, &config.Config{DBType: "inmemory"})
+	require.NoError(t, err)
+	err = service.Add(ctx, "192.168.1.")
 	require.ErrorIs(t, err, ErrInvalidIpv4Address)
 }
 
 func TestIPService_Add_InvalidSubnet(t *testing.T) {
-	service := NewIP(context.Background(), inmemory.NewIPStorage())
 	ctx := context.Background()
-	err := service.Add(ctx, "192.168.1./50")
+	service, err := NewIP(ctx, &config.Config{DBType: "inmemory"})
+	require.NoError(t, err)
+	err = service.Add(ctx, "192.168.1./50")
 	require.ErrorIs(t, err, ErrInvalidIpv4Subnet)
 }
 
 func TestIPService_GetAll_Empty(t *testing.T) {
-	service := NewIP(context.Background(), inmemory.NewIPStorage())
 	ctx := context.Background()
+	service, err := NewIP(ctx, &config.Config{DBType: "inmemory"})
+	require.NoError(t, err)
 	require.Len(t, service.GetAll(ctx), 0)
 }
 
 func TestIPService_GetAll_NotEmpty(t *testing.T) {
-	service := NewIP(context.Background(), inmemory.NewIPStorage())
+	ctx := context.Background()
+	service, err := NewIP(ctx, &config.Config{DBType: "inmemory"})
+	require.NoError(t, err)
 	ips := []string{"192.168.1.12", "10.10.0.0/24"}
 	sort.Strings(ips)
-	ctx := context.Background()
 	for _, ip := range ips {
 		err := service.Add(ctx, ip)
 		require.NoError(t, err)
@@ -151,9 +160,10 @@ func TestIPService_Remove_Exists(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			service := NewIP(context.Background(), inmemory.NewIPStorage())
 			ctx := context.Background()
-			err := service.Add(ctx, test.tableIP)
+			service, err := NewIP(ctx, &config.Config{DBType: "inmemory"})
+			require.NoError(t, err)
+			err = service.Add(ctx, test.tableIP)
 			require.NoError(t, err)
 
 			f, err := service.Contains(ctx, test.searchIP)
@@ -185,8 +195,9 @@ func TestIPService_Remove_NotExists(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			service := NewIP(context.Background(), inmemory.NewIPStorage())
 			ctx := context.Background()
+			service, err := NewIP(ctx, &config.Config{DBType: "inmemory"})
+			require.NoError(t, err)
 			require.NotPanics(t, func() {
 				service.Remove(ctx, test.tableIP)
 			})

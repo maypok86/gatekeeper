@@ -10,6 +10,7 @@ import (
 
 func TestConfig_Get(t *testing.T) {
 	testConfig := &Config{
+		DBType: "inmemory",
 		Logger: &Logger{
 			Level: "warn",
 			File:  "test.log",
@@ -25,7 +26,7 @@ func TestConfig_Get(t *testing.T) {
 	require.NoError(t, err)
 	err = os.Setenv("LOGGER_FILE", testConfig.Logger.File)
 	require.NoError(t, err)
-	err = os.Setenv("BUCKET_TYPE", testConfig.Bucket.Type)
+	err = os.Setenv("DB_TYPE", testConfig.DBType)
 	require.NoError(t, err)
 	err = os.Setenv("BUCKET_TTL", testConfig.Bucket.TTL.String())
 	require.NoError(t, err)
