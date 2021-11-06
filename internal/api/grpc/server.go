@@ -121,3 +121,17 @@ func (s *Service) WhitelistRemove(ctx context.Context, request *apipb.WhitelistR
 	zap.L().Info("Remove from whitelist", zap.String("subnet", request.Subnet))
 	return &apipb.WhitelistRemoveResponse{Ok: true}, nil
 }
+
+func (s *Service) BlacklistAdd(ctx context.Context, request *apipb.BlacklistAddRequest) (*apipb.BlacklistAddResponse, error) {
+	if err := s.blacklistService.Add(ctx, request.Subnet); err != nil {
+		return &apipb.BlacklistAddResponse{Ok: false}, err
+	}
+	zap.L().Info("Add to blacklist", zap.String("subnet", request.Subnet))
+	return &apipb.BlacklistAddResponse{Ok: true}, nil
+}
+
+func (s *Service) BlacklistRemove(ctx context.Context, request *apipb.BlacklistRemoveRequest) (*apipb.BlacklistRemoveResponse, error) {
+	s.blacklistService.Remove(ctx, request.Subnet)
+	zap.L().Info("Remove from blacklist", zap.String("subnet", request.Subnet))
+	return &apipb.BlacklistRemoveResponse{Ok: true}, nil
+}

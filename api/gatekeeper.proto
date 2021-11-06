@@ -10,6 +10,8 @@ service GatekeeperService {
   rpc ResetIP(ResetIPRequest) returns (ResetIPResponse) {}
   rpc WhitelistAdd (WhitelistAddRequest) returns (WhitelistAddResponse) {}
   rpc WhitelistRemove (WhitelistRemoveRequest) returns (WhitelistRemoveResponse) {}
+  rpc BlacklistAdd (BlacklistAddRequest) returns (BlacklistAddResponse) {}
+  rpc BlacklistRemove (BlacklistRemoveRequest) returns (BlacklistRemoveResponse) {}
 }
 
 message AllowRequest {
@@ -51,5 +53,21 @@ message WhitelistRemoveRequest {
 }
 
 message WhitelistRemoveResponse {
+  bool ok = 1;
+}
+
+message BlacklistAddRequest {
+  string subnet = 1;
+}
+
+message BlacklistAddResponse {
+  bool ok = 1;
+}
+
+message BlacklistRemoveRequest {
+  string subnet = 1;
+}
+
+message BlacklistRemoveResponse {
   bool ok = 1;
 }

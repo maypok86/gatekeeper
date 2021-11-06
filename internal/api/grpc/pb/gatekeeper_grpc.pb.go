@@ -4,7 +4,6 @@ package apipb
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -24,6 +23,8 @@ type GatekeeperServiceClient interface {
 	ResetIP(ctx context.Context, in *ResetIPRequest, opts ...grpc.CallOption) (*ResetIPResponse, error)
 	WhitelistAdd(ctx context.Context, in *WhitelistAddRequest, opts ...grpc.CallOption) (*WhitelistAddResponse, error)
 	WhitelistRemove(ctx context.Context, in *WhitelistRemoveRequest, opts ...grpc.CallOption) (*WhitelistRemoveResponse, error)
+	BlacklistAdd(ctx context.Context, in *BlacklistAddRequest, opts ...grpc.CallOption) (*BlacklistAddResponse, error)
+	BlacklistRemove(ctx context.Context, in *BlacklistRemoveRequest, opts ...grpc.CallOption) (*BlacklistRemoveResponse, error)
 }
 
 type gatekeeperServiceClient struct {
@@ -79,6 +80,24 @@ func (c *gatekeeperServiceClient) WhitelistRemove(ctx context.Context, in *White
 	return out, nil
 }
 
+func (c *gatekeeperServiceClient) BlacklistAdd(ctx context.Context, in *BlacklistAddRequest, opts ...grpc.CallOption) (*BlacklistAddResponse, error) {
+	out := new(BlacklistAddResponse)
+	err := c.cc.Invoke(ctx, "/api.GatekeeperService/BlacklistAdd", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gatekeeperServiceClient) BlacklistRemove(ctx context.Context, in *BlacklistRemoveRequest, opts ...grpc.CallOption) (*BlacklistRemoveResponse, error) {
+	out := new(BlacklistRemoveResponse)
+	err := c.cc.Invoke(ctx, "/api.GatekeeperService/BlacklistRemove", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GatekeeperServiceServer is the server API for GatekeeperService service.
 // All implementations must embed UnimplementedGatekeeperServiceServer
 // for forward compatibility
@@ -88,30 +107,35 @@ type GatekeeperServiceServer interface {
 	ResetIP(context.Context, *ResetIPRequest) (*ResetIPResponse, error)
 	WhitelistAdd(context.Context, *WhitelistAddRequest) (*WhitelistAddResponse, error)
 	WhitelistRemove(context.Context, *WhitelistRemoveRequest) (*WhitelistRemoveResponse, error)
+	BlacklistAdd(context.Context, *BlacklistAddRequest) (*BlacklistAddResponse, error)
+	BlacklistRemove(context.Context, *BlacklistRemoveRequest) (*BlacklistRemoveResponse, error)
 	mustEmbedUnimplementedGatekeeperServiceServer()
 }
 
 // UnimplementedGatekeeperServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedGatekeeperServiceServer struct{}
+type UnimplementedGatekeeperServiceServer struct {
+}
 
 func (UnimplementedGatekeeperServiceServer) Allow(context.Context, *AllowRequest) (*AllowResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Allow not implemented")
 }
-
 func (UnimplementedGatekeeperServiceServer) ResetLogin(context.Context, *ResetLoginRequest) (*ResetLoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetLogin not implemented")
 }
-
 func (UnimplementedGatekeeperServiceServer) ResetIP(context.Context, *ResetIPRequest) (*ResetIPResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetIP not implemented")
 }
-
 func (UnimplementedGatekeeperServiceServer) WhitelistAdd(context.Context, *WhitelistAddRequest) (*WhitelistAddResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method WhitelistAdd not implemented")
 }
-
 func (UnimplementedGatekeeperServiceServer) WhitelistRemove(context.Context, *WhitelistRemoveRequest) (*WhitelistRemoveResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method WhitelistRemove not implemented")
+}
+func (UnimplementedGatekeeperServiceServer) BlacklistAdd(context.Context, *BlacklistAddRequest) (*BlacklistAddResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BlacklistAdd not implemented")
+}
+func (UnimplementedGatekeeperServiceServer) BlacklistRemove(context.Context, *BlacklistRemoveRequest) (*BlacklistRemoveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BlacklistRemove not implemented")
 }
 func (UnimplementedGatekeeperServiceServer) mustEmbedUnimplementedGatekeeperServiceServer() {}
 
@@ -216,6 +240,42 @@ func _GatekeeperService_WhitelistRemove_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GatekeeperService_BlacklistAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BlacklistAddRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatekeeperServiceServer).BlacklistAdd(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.GatekeeperService/BlacklistAdd",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatekeeperServiceServer).BlacklistAdd(ctx, req.(*BlacklistAddRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GatekeeperService_BlacklistRemove_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BlacklistRemoveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatekeeperServiceServer).BlacklistRemove(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.GatekeeperService/BlacklistRemove",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatekeeperServiceServer).BlacklistRemove(ctx, req.(*BlacklistRemoveRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GatekeeperService_ServiceDesc is the grpc.ServiceDesc for GatekeeperService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -242,6 +302,14 @@ var GatekeeperService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "WhitelistRemove",
 			Handler:    _GatekeeperService_WhitelistRemove_Handler,
+		},
+		{
+			MethodName: "BlacklistAdd",
+			Handler:    _GatekeeperService_BlacklistAdd_Handler,
+		},
+		{
+			MethodName: "BlacklistRemove",
+			Handler:    _GatekeeperService_BlacklistRemove_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
