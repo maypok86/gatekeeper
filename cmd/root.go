@@ -19,7 +19,7 @@ func init() {
 var rootCmd = &cobra.Command{
 	Use:   "gk",
 	Short: "Gatekeeper service and cli",
-	Long:  `Gatekeeper is storage limiting service and cli tool`,
+	Long:  `Gatekeeper is rate limiting service and cli tool`,
 }
 
 func runGrpcClient(
@@ -31,17 +31,19 @@ func runGrpcClient(
 			log.Fatalf("did not connect: %v", err)
 		}
 		defer func() {
-			_ = conn.Close()
+			if err := conn.Close(); err != nil {
+				log.Fatal(err)
+			}
 		}()
 		client := apipb.NewGatekeeperServiceClient(conn)
 
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
 		ok, err := getOk(client, ctx, args[0])
+		log.Printf("Success: %t", ok)
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Printf("Success: %t", ok)
 	}
 }
 

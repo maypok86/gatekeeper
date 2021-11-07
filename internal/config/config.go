@@ -11,18 +11,18 @@ import (
 )
 
 type Config struct {
-	DBType       string `envconfig:"DB_TYPE" default:"inmemory"`
-	Host         string `envconfig:"HOST" default:"0.0.0.0"`
-	Port         string `envconfig:"PORT" default:"50051"`
-	RateLogin    int    `envconfig:"RATE_LOGIN" default:"10"`
+	DBType       string `envconfig:"DB_TYPE"       default:"inmemory"`
+	Host         string `envconfig:"HOST"          default:"0.0.0.0"`
+	Port         string `envconfig:"PORT"          default:"50051"`
+	RateLogin    int    `envconfig:"RATE_LOGIN"    default:"10"`
 	RatePassword int    `envconfig:"RATE_PASSWORD" default:"100"`
-	RateIP       int    `envconfig:"RATE_IP" default:"1000"`
+	RateIP       int    `envconfig:"RATE_IP"       default:"1000"`
 	Logger       *Logger
 }
 
 type Logger struct {
 	Level string `envconfig:"LOGGER_LEVEL" default:"info"`
-	File  string `envconfig:"LOGGER_FILE" default:"develop.log"`
+	File  string `envconfig:"LOGGER_FILE"  default:"develop.log"`
 }
 
 type Bucket struct {

@@ -7,10 +7,11 @@
 package apipb
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -784,23 +785,26 @@ func file_gatekeeper_proto_rawDescGZIP() []byte {
 	return file_gatekeeper_proto_rawDescData
 }
 
-var file_gatekeeper_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
-var file_gatekeeper_proto_goTypes = []interface{}{
-	(*AllowRequest)(nil),            // 0: api.AllowRequest
-	(*AllowResponse)(nil),           // 1: api.AllowResponse
-	(*ResetLoginRequest)(nil),       // 2: api.ResetLoginRequest
-	(*ResetLoginResponse)(nil),      // 3: api.ResetLoginResponse
-	(*ResetIPRequest)(nil),          // 4: api.ResetIPRequest
-	(*ResetIPResponse)(nil),         // 5: api.ResetIPResponse
-	(*WhitelistAddRequest)(nil),     // 6: api.WhitelistAddRequest
-	(*WhitelistAddResponse)(nil),    // 7: api.WhitelistAddResponse
-	(*WhitelistRemoveRequest)(nil),  // 8: api.WhitelistRemoveRequest
-	(*WhitelistRemoveResponse)(nil), // 9: api.WhitelistRemoveResponse
-	(*BlacklistAddRequest)(nil),     // 10: api.BlacklistAddRequest
-	(*BlacklistAddResponse)(nil),    // 11: api.BlacklistAddResponse
-	(*BlacklistRemoveRequest)(nil),  // 12: api.BlacklistRemoveRequest
-	(*BlacklistRemoveResponse)(nil), // 13: api.BlacklistRemoveResponse
-}
+var (
+	file_gatekeeper_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+	file_gatekeeper_proto_goTypes  = []interface{}{
+		(*AllowRequest)(nil),            // 0: api.AllowRequest
+		(*AllowResponse)(nil),           // 1: api.AllowResponse
+		(*ResetLoginRequest)(nil),       // 2: api.ResetLoginRequest
+		(*ResetLoginResponse)(nil),      // 3: api.ResetLoginResponse
+		(*ResetIPRequest)(nil),          // 4: api.ResetIPRequest
+		(*ResetIPResponse)(nil),         // 5: api.ResetIPResponse
+		(*WhitelistAddRequest)(nil),     // 6: api.WhitelistAddRequest
+		(*WhitelistAddResponse)(nil),    // 7: api.WhitelistAddResponse
+		(*WhitelistRemoveRequest)(nil),  // 8: api.WhitelistRemoveRequest
+		(*WhitelistRemoveResponse)(nil), // 9: api.WhitelistRemoveResponse
+		(*BlacklistAddRequest)(nil),     // 10: api.BlacklistAddRequest
+		(*BlacklistAddResponse)(nil),    // 11: api.BlacklistAddResponse
+		(*BlacklistRemoveRequest)(nil),  // 12: api.BlacklistRemoveRequest
+		(*BlacklistRemoveResponse)(nil), // 13: api.BlacklistRemoveResponse
+	}
+)
+
 var file_gatekeeper_proto_depIdxs = []int32{
 	0,  // 0: api.GatekeeperService.Allow:input_type -> api.AllowRequest
 	2,  // 1: api.GatekeeperService.ResetLogin:input_type -> api.ResetLoginRequest
