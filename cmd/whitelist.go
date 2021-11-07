@@ -2,12 +2,10 @@ package cmd
 
 import (
 	"context"
-	"log"
-	"time"
+	"fmt"
 
 	apipb "github.com/maypok86/gatekeeper/internal/api/grpc/pb"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
 )
 
 var rootWhitelistCmd = &cobra.Command{
@@ -22,27 +20,16 @@ var whitelistAddCmd = &cobra.Command{
 	Long:    `Add ip/subnet to whitelist`,
 	Example: "gk whitelist add <ip/subnet>",
 	Args:    cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		conn, err := grpc.Dial(serverURL, grpc.WithInsecure(), grpc.WithBlock())
-		if err != nil {
-			log.Fatalf("did not connect: %v", err)
-		}
-		defer func() {
-			_ = conn.Close()
-		}()
-		client := apipb.NewGatekeeperServiceClient(conn)
-
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-		defer cancel()
-		subnet := args[0]
+	Run: runGrpcClient(func(client apipb.GatekeeperServiceClient, ctx context.Context, arg string) (bool, error) {
 		response, err := client.WhitelistAdd(ctx, &apipb.WhitelistAddRequest{
-			Subnet: subnet,
+			Subnet: arg,
 		})
+		ok := response.GetOk()
 		if err != nil {
-			log.Fatalf("could not add to whitelist: %v", err)
+			return ok, fmt.Errorf("could not add to whitelist: %w", err)
 		}
-		log.Printf("Success: %t", response.Ok)
-	},
+		return response.GetOk(), nil
+	}),
 }
 
 var whitelistRemoveCmd = &cobra.Command{
@@ -51,27 +38,16 @@ var whitelistRemoveCmd = &cobra.Command{
 	Long:    `Remove ip/subnet from whitelist`,
 	Example: "gk whitelist remove <ip/subnet>",
 	Args:    cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		conn, err := grpc.Dial(serverURL, grpc.WithInsecure(), grpc.WithBlock())
-		if err != nil {
-			log.Fatalf("did not connect: %v", err)
-		}
-		defer func() {
-			_ = conn.Close()
-		}()
-		client := apipb.NewGatekeeperServiceClient(conn)
-
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-		defer cancel()
-		subnet := args[0]
+	Run: runGrpcClient(func(client apipb.GatekeeperServiceClient, ctx context.Context, arg string) (bool, error) {
 		response, err := client.WhitelistRemove(ctx, &apipb.WhitelistRemoveRequest{
-			Subnet: subnet,
+			Subnet: arg,
 		})
+		ok := response.GetOk()
 		if err != nil {
-			log.Fatalf("could not remove from whitelist: %v", err)
+			return ok, fmt.Errorf("could not remove from whitelist: %w", err)
 		}
-		log.Printf("Success: %t", response.Ok)
-	},
+		return ok, nil
+	}),
 }
 
 func init() {

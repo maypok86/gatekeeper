@@ -10,6 +10,7 @@ setup: ## Install all the build and lint dependencies
 	(which golangci-lint > /dev/null) || curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.41.1
 	go install github.com/daixiang0/gci@latest
 	GO111MODULE=on go install mvdan.cc/gofumpt@latest
+	go install github.com/segmentio/golines@latest
 
 .PHONY: build
 build: ## Build a version
@@ -26,7 +27,7 @@ version: build ## Build and view project version
 
 .PHONY: fmt
 fmt: ## Run gci on all go files
-	find . -name '*.go' -not -wholename './vendor/*' | while read -r file; do gci -w "$$file" && gofumpt -w "$$file"; done
+	find . -name '*.go' -not -wholename './vendor/*' | while read -r file; do golines -m 140 -w "$$file" && gci -w "$$file" && gofumpt -w "$$file"; done
 
 .PHONY: lint
 lint: ## Run all the linters

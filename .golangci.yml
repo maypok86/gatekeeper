@@ -6,8 +6,10 @@ run:
 
 linters-settings:
   funlen:
-    lines: 150
+    lines: 140
     statements: 80
+  lll:
+    line-length: 140
 
 issues:
   exclude-rules:

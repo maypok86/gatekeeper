@@ -1,13 +1,11 @@
-package cmd
+package cmd //nolint:dupl
 
 import (
 	"context"
-	"log"
-	"time"
+	"fmt"
 
 	apipb "github.com/maypok86/gatekeeper/internal/api/grpc/pb"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
 )
 
 var rootResetCmd = &cobra.Command{
@@ -22,27 +20,16 @@ var resetLoginCmd = &cobra.Command{
 	Long:    `Reset bucket by login`,
 	Example: "gk reset login <login>",
 	Args:    cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		conn, err := grpc.Dial(serverURL, grpc.WithInsecure(), grpc.WithBlock())
-		if err != nil {
-			log.Fatalf("did not connect: %v", err)
-		}
-		defer func() {
-			_ = conn.Close()
-		}()
-		client := apipb.NewGatekeeperServiceClient(conn)
-
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-		defer cancel()
-		login := args[0]
+	Run: runGrpcClient(func(client apipb.GatekeeperServiceClient, ctx context.Context, arg string) (bool, error) {
 		response, err := client.ResetLogin(ctx, &apipb.ResetLoginRequest{
-			Login: login,
+			Login: arg,
 		})
+		ok := response.GetOk()
 		if err != nil {
-			log.Fatalf("could not reset: %v", err)
+			return ok, fmt.Errorf("could not reset login: %w", err)
 		}
-		log.Printf("Success: %t", response.Ok)
-	},
+		return ok, nil
+	}),
 }
 
 var resetIPCmd = &cobra.Command{
@@ -51,27 +38,16 @@ var resetIPCmd = &cobra.Command{
 	Long:    `Reset bucket by ip`,
 	Example: "gk reset ip <ip>",
 	Args:    cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		conn, err := grpc.Dial(serverURL, grpc.WithInsecure(), grpc.WithBlock())
-		if err != nil {
-			log.Fatalf("did not connect: %v", err)
-		}
-		defer func() {
-			_ = conn.Close()
-		}()
-		client := apipb.NewGatekeeperServiceClient(conn)
-
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-		defer cancel()
-		ip := args[0]
+	Run: runGrpcClient(func(client apipb.GatekeeperServiceClient, ctx context.Context, arg string) (bool, error) {
 		response, err := client.ResetIP(ctx, &apipb.ResetIPRequest{
-			Ip: ip,
+			Ip: arg,
 		})
+		ok := response.GetOk()
 		if err != nil {
-			log.Fatalf("could not reset: %v", err)
+			return ok, fmt.Errorf("could not reset ip: %w", err)
 		}
-		log.Printf("Success: %t", response.Ok)
-	},
+		return ok, nil
+	}),
 }
 
 func init() {
