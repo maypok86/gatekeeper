@@ -3,7 +3,6 @@ package inmemory
 import (
 	"context"
 	"net"
-	"sort"
 	"sync"
 
 	"go.uber.org/zap"
@@ -62,24 +61,6 @@ func (is *IPStorage) AddSubnet(ctx context.Context, subnet *net.IPNet) {
 		is.mutex.Lock()
 		defer is.mutex.Unlock()
 		is.subnetMap[subnet.String()] = subnet
-	}
-}
-
-func (is *IPStorage) GetAll(ctx context.Context) []string {
-	select {
-	case <-ctx.Done():
-		zap.L().Warn("Get all ips cancel")
-		return []string{}
-	default:
-		ips := make([]string, 0)
-		for ip := range is.ipSet {
-			ips = append(ips, ip)
-		}
-		for subnet := range is.subnetMap {
-			ips = append(ips, subnet)
-		}
-		sort.Strings(ips)
-		return ips
 	}
 }
 

@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"sort"
 	"testing"
 
 	"github.com/maypok86/gatekeeper/internal/config"
@@ -119,26 +118,6 @@ func TestIPService_Add_InvalidSubnet(t *testing.T) {
 	require.NoError(t, err)
 	err = service.Add(ctx, "192.168.1./50")
 	require.ErrorIs(t, err, ErrInvalidIpv4Subnet)
-}
-
-func TestIPService_GetAll_Empty(t *testing.T) {
-	ctx := context.Background()
-	service, err := NewIP(ctx, &config.Config{DBType: "inmemory"})
-	require.NoError(t, err)
-	require.Len(t, service.GetAll(ctx), 0)
-}
-
-func TestIPService_GetAll_NotEmpty(t *testing.T) {
-	ctx := context.Background()
-	service, err := NewIP(ctx, &config.Config{DBType: "inmemory"})
-	require.NoError(t, err)
-	ips := []string{"192.168.1.12", "10.10.0.0/24"}
-	sort.Strings(ips)
-	for _, ip := range ips {
-		err := service.Add(ctx, ip)
-		require.NoError(t, err)
-	}
-	require.Equal(t, ips, service.GetAll(ctx))
 }
 
 func TestIPService_Remove_Exists(t *testing.T) {

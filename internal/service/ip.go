@@ -20,7 +20,6 @@ var (
 type IP interface {
 	Contains(ctx context.Context, clientIP string) (bool, error)
 	Add(ctx context.Context, ipOrSubnet string) error
-	GetAll(ctx context.Context) []string
 	Remove(ctx context.Context, ipOrSubnet string)
 }
 
@@ -70,10 +69,6 @@ func (is *ipService) Add(ctx context.Context, ipOrSubnet string) error {
 		is.ip.AddIP(ctx, ip)
 	}
 	return nil
-}
-
-func (is *ipService) GetAll(ctx context.Context) []string {
-	return is.ip.GetAll(ctx)
 }
 
 func (is *ipService) Remove(ctx context.Context, ipOrSubnet string) {
