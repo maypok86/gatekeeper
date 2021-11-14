@@ -10,6 +10,7 @@ import (
 
 func TestConfig_Get(t *testing.T) {
 	testConfig := &Config{
+		Environment:  "prod",
 		DBType:       "inmemory",
 		Host:         "0.0.0.1",
 		Port:         "50050",
@@ -25,6 +26,8 @@ func TestConfig_Get(t *testing.T) {
 	err := os.Setenv("LOGGER_LEVEL", testConfig.Logger.Level)
 	require.NoError(t, err)
 	err = os.Setenv("LOGGER_FILE", testConfig.Logger.File)
+	require.NoError(t, err)
+	err = os.Setenv("ENVIRONMENT", string(testConfig.Environment))
 	require.NoError(t, err)
 	err = os.Setenv("DB_TYPE", testConfig.DBType)
 	require.NoError(t, err)

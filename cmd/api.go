@@ -18,6 +18,7 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func init() {
@@ -42,6 +43,10 @@ var apiCmd = &cobra.Command{
 				grpc_zap.UnaryServerInterceptor(zap.L()),
 			)),
 		)
+		if cfg.IsDev() {
+			reflection.Register(grpcServer)
+		}
+
 		grpcService, err := grpc_service.NewService(ctx)
 		if err != nil {
 			log.Fatal(fmt.Sprintf("failed to get grpc service %v", err))

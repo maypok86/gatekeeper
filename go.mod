@@ -3,6 +3,7 @@ module github.com/maypok86/gatekeeper
 go 1.17
 
 require (
+	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/pkg/errors v0.8.1
 	github.com/spf13/cobra v1.2.1
@@ -18,7 +19,6 @@ require (
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
