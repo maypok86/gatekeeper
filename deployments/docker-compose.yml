@@ -2,10 +2,28 @@ version: "3.7"
 
 services:
   gatekeeper:
-    container_name: ${CONTAINER_NAME}
+    container_name: gatekeeper
     build:
       context: ..
       dockerfile: build/Dockerfile
     ports:
       - "50051:50051"
+      - "9091:9091" # prometheus
+    networks:
+      - monitoring
     restart: always
+
+  prometheus:
+    container_name: prometheus
+    build:
+      context: ..
+      dockerfile: build/prometheus/Dockerfile
+      network: host
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    driver: bridge
