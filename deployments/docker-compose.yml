@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  gatekeeper:
+    container_name: ${CONTAINER_NAME}
+    build:
+      context: ..
+      dockerfile: build/Dockerfile
+    ports:
+      - "50051:50051"
+    restart: always
