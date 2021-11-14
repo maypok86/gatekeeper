@@ -10,13 +10,14 @@ import (
 
 func TestConfig_Get(t *testing.T) {
 	testConfig := &Config{
-		Environment:  "prod",
-		DBType:       "inmemory",
-		Host:         "0.0.0.1",
-		Port:         "50050",
-		RateLogin:    11,
-		RatePassword: 101,
-		RateIP:       1001,
+		Environment:    "prod",
+		DBType:         "inmemory",
+		Host:           "0.0.0.1",
+		Port:           "50050",
+		RateLogin:      11,
+		RatePassword:   101,
+		RateIP:         1001,
+		PrometheusPort: "9090",
 		Logger: &Logger{
 			Level: "warn",
 			File:  "test.log",
@@ -40,6 +41,8 @@ func TestConfig_Get(t *testing.T) {
 	err = os.Setenv("RATE_PASSWORD", strconv.Itoa(testConfig.RatePassword))
 	require.NoError(t, err)
 	err = os.Setenv("RATE_IP", strconv.Itoa(testConfig.RateIP))
+	require.NoError(t, err)
+	err = os.Setenv("PROMETHEUS_PORT", testConfig.PrometheusPort)
 	require.NoError(t, err)
 
 	cfg := Get()

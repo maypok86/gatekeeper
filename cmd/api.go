@@ -5,16 +5,19 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
+	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	grpc_service "github.com/maypok86/gatekeeper/internal/api/grpc"
 	apipb "github.com/maypok86/gatekeeper/internal/api/grpc/pb"
 	"github.com/maypok86/gatekeeper/internal/config"
 	"github.com/maypok86/gatekeeper/internal/logger"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -37,9 +40,11 @@ var apiCmd = &cobra.Command{
 
 		grpcServer := grpc.NewServer(
 			grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
+				grpc_prometheus.StreamServerInterceptor,
 				grpc_zap.StreamServerInterceptor(zap.L()),
 			)),
 			grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
+				grpc_prometheus.UnaryServerInterceptor,
 				grpc_zap.UnaryServerInterceptor(zap.L()),
 			)),
 		)
@@ -55,6 +60,19 @@ var apiCmd = &cobra.Command{
 
 		errChan := make(chan error)
 		quitChan := make(chan os.Signal, 1)
+
+		grpc_prometheus.Register(grpcServer)
+		grpc_prometheus.EnableHandlingTimeHistogram()
+		zap.L().Info("Monitoring export listen ", zap.String("port", cfg.PrometheusPort))
+		go func() {
+			err = http.ListenAndServe(net.JoinHostPort(cfg.Host, cfg.PrometheusPort), promhttp.Handler())
+			if err != nil {
+				zap.L().Error(err.Error())
+				errChan <- err
+			}
+			http.Handle("/metrics", promhttp.Handler())
+		}()
+
 		zap.L().Info("grpc server starting")
 		go func() {
 			lis, err := net.Listen("tcp", net.JoinHostPort(cfg.Host, cfg.Port))
