@@ -1,4 +1,4 @@
-name: Run unit tests
+name: Run tests
 
 on:
   push:
@@ -28,5 +28,8 @@ jobs:
       - name: Lint code
         run: make lint
 
-      - name: Test code
-        run: make test
+      - name: Run unit tests
+        run: make unit-test
+
+      - name: Run integration tests
+        run: make integration-test

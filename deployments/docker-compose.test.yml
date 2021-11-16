@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+  integration_tests:
+    build:
+      context: ..
+      dockerfile: build/test.Dockerfile
+    command: "true"
+    networks:
+      - tests
+    environment:
+      GRPC_ADDRESS: "gatekeeper:50051"
+    depends_on:
+      - gatekeeper
+
+  gatekeeper:
+    build:
+      context: ..
+      dockerfile: build/Dockerfile
+    ports:
+      - "50051:50051"
+    networks:
+      - tests
+    restart: on-failure
+networks:
+  tests:
+    driver: bridge

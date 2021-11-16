@@ -33,18 +33,28 @@ fmt: ## Run gci on all go files
 lint: ## Run all the linters
 	golangci-lint run ./...
 
-.PHONY: test
-test: ## Run all the tests
+.PHONY: unit-test
+unit-test: ## Run all unit tests
 	echo -n > coverage.txt
-	echo -n > develop.log
-	echo 'mode: atomic' > coverage.txt && go test -covermode=atomic -coverprofile=coverage.txt -v -race ./...
+	echo 'mode: atomic' > coverage.txt && go test -covermode=atomic -coverprofile=coverage.txt -v -race ./cmd/... ./internal/... ./pkg/...
+
+.PHONY: integration-test
+integration-test: ## Run all integration tests
+	set -e ;\
+	echo -n > integration.log ;\
+    docker-compose -f ./deployments/docker-compose.test.yml up --build -d ;\
+    test_status_code=0 ;\
+    docker-compose -f ./deployments/docker-compose.test.yml run integration_tests go test ./tests/integration || test_status_code=$$? ;\
+    docker-compose -f ./deployments/docker-compose.test.yml logs > integration.log ;\
+    docker-compose -f ./deployments/docker-compose.test.yml down ;\
+    exit $$test_status_code ;
 
 .PHONY: cover
-cover: test ## Run all the tests and opens the coverage report
+cover: unit-test ## Run all the tests and opens the coverage report
 	go tool cover -html=coverage.txt
 
 .PHONY: ci
-ci: lint test ## Run all the tests and code checks
+ci: lint unit-test ## Run all the tests and code checks
 
 .PHONY: generate
 generate: ## Generate code
@@ -63,6 +73,7 @@ clean: ## Remove temporary files
 	rm -rf bin/
 	rm -rf coverage.txt
 	rm -rf develop.log
+	rm -rf integration.log
 
 .PHONY: help
 help:
