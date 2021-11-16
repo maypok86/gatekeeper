@@ -19,7 +19,7 @@ RUN CGO_ENABLED=0 go build \
 FROM alpine:latest
 LABEL maintainer="Mayshev Alex <alex.mayshev.86@gmail.com>"
 
-ENV BIN_FILE "/opt/gatekeeper"
+ENV BIN_FILE /opt/gatekeeper
 COPY --from=builder ${BIN_FILE} ${BIN_FILE}
 
 EXPOSE 50051

@@ -2,32 +2,25 @@ SHELL := /bin/bash
 
 BIN := "./bin/gk"
 
-GIT_HASH := $(shell git log --format="%h" -n 1)
-LDFLAGS := -X 'github.com/maypok86/gatekeeper/cmd.version=$(GIT_HASH)' -X 'github.com/maypok86/gatekeeper/cmd.buildDate=$(shell date -u +%Y-%m-%dT%H:%M:%S)'
-
 .PHONY: setup
 setup: ## Install all the build and lint dependencies
-	(which golangci-lint > /dev/null) || curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.41.1
-	go install github.com/daixiang0/gci@latest
-	GO111MODULE=on go install mvdan.cc/gofumpt@latest
-	go install github.com/segmentio/golines@latest
+	bash scripts/setup.sh
 
 .PHONY: build
 build: ## Build a version
-	go build -v -o $(BIN) -ldflags "$(LDFLAGS)" .
+	bash scripts/build.sh $(BIN)
 
 .PHONY: api
 api: build ## Start api server
-	echo -n > develop.log
-	$(BIN) api
+	echo -n > develop.log && $(BIN) api
 
 .PHONY: version
 version: build ## Build and view project version
 	$(BIN) version
 
 .PHONY: fmt
-fmt: ## Run gci on all go files
-	find . -name '*.go' -not -wholename './vendor/*' | while read -r file; do golines -m 140 -w "$$file" && gci -w "$$file" && gofumpt -w "$$file"; done
+fmt: ## Run format tools on all go files
+	bash scripts/fmt.sh
 
 .PHONY: lint
 lint: ## Run all the linters
@@ -35,19 +28,11 @@ lint: ## Run all the linters
 
 .PHONY: unit-test
 unit-test: ## Run all unit tests
-	echo -n > coverage.txt
-	echo 'mode: atomic' > coverage.txt && go test -covermode=atomic -coverprofile=coverage.txt -v -race ./cmd/... ./internal/... ./pkg/...
+	bash scripts/unit-tests.sh
 
 .PHONY: integration-test
 integration-test: ## Run all integration tests
-	set -e ;\
-	echo -n > integration.log ;\
-    docker-compose -f ./deployments/docker-compose.test.yml up --build -d ;\
-    test_status_code=0 ;\
-    docker-compose -f ./deployments/docker-compose.test.yml run integration_tests go test ./tests/integration || test_status_code=$$? ;\
-    docker-compose -f ./deployments/docker-compose.test.yml logs > integration.log ;\
-    docker-compose -f ./deployments/docker-compose.test.yml down ;\
-    exit $$test_status_code ;
+	bash scripts/integration-tests.sh
 
 .PHONY: cover
 cover: unit-test ## Run all the tests and opens the coverage report
@@ -58,22 +43,11 @@ ci: lint unit-test ## Run all the tests and code checks
 
 .PHONY: generate
 generate: ## Generate code
-	go generate ./...
-	rm -rf internal/api/grpc/pb
-	mkdir -p internal/api/grpc/pb
-	protoc \
-        		--proto_path=api/ \
-        		--go_out=internal/api/grpc/pb \
-        		--go-grpc_out=internal/api/grpc/pb \
-        		api/gatekeeper.proto
+	bash scripts/generate.sh
 
 .PHONY: clean
 clean: ## Remove temporary files
-	go clean
-	rm -rf bin/
-	rm -rf coverage.txt
-	rm -rf develop.log
-	rm -rf integration.log
+	bash scripts/clean.sh
 
 .PHONY: help
 help:

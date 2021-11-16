@@ -114,32 +114,27 @@ type GatekeeperServiceServer interface {
 }
 
 // UnimplementedGatekeeperServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedGatekeeperServiceServer struct{}
+type UnimplementedGatekeeperServiceServer struct {
+}
 
 func (UnimplementedGatekeeperServiceServer) Allow(context.Context, *AllowRequest) (*AllowResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Allow not implemented")
 }
-
 func (UnimplementedGatekeeperServiceServer) ResetLogin(context.Context, *ResetLoginRequest) (*ResetLoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetLogin not implemented")
 }
-
 func (UnimplementedGatekeeperServiceServer) ResetIP(context.Context, *ResetIPRequest) (*ResetIPResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetIP not implemented")
 }
-
 func (UnimplementedGatekeeperServiceServer) WhitelistAdd(context.Context, *WhitelistAddRequest) (*WhitelistAddResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method WhitelistAdd not implemented")
 }
-
 func (UnimplementedGatekeeperServiceServer) WhitelistRemove(context.Context, *WhitelistRemoveRequest) (*WhitelistRemoveResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method WhitelistRemove not implemented")
 }
-
 func (UnimplementedGatekeeperServiceServer) BlacklistAdd(context.Context, *BlacklistAddRequest) (*BlacklistAddResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BlacklistAdd not implemented")
 }
-
 func (UnimplementedGatekeeperServiceServer) BlacklistRemove(context.Context, *BlacklistRemoveRequest) (*BlacklistRemoveResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BlacklistRemove not implemented")
 }

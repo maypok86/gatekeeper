@@ -1,9 +1,6 @@
 FROM golang:1.17
 
-ENV CODE_DIR /opt/integration_tests
-
-RUN mkdir -p ${CODE_DIR}
-WORKDIR ${CODE_DIR}
+WORKDIR /opt/integration_tests
 
 COPY go.mod .
 COPY go.sum .
