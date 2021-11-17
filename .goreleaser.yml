@@ -1,0 +1,49 @@
+project_name: Gatekeeper
+
+before:
+  hooks:
+    - go mod tidy
+    - go mod download
+
+builds:
+  - binary: gk
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    ldflags:
+      - -X github.com/maypok86/gatekeeper/cmd.version={{.Version}}
+      - -X github.com/maypok86/gatekeeper/cmd.buildDate={{.CommitDate}}
+
+archives:
+  - builds: [gk]
+    replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+
+nfpms:
+  - vendor: gk
+    homepage: https://github.com/maypok86/gatekeeper
+    maintainer: Mayshev Alexey
+    description: Gatekeeper is rate limiting service and cli.
+    license: MIT
+    formats: [ deb, rpm, apk ]
+    bindir: /usr/bin

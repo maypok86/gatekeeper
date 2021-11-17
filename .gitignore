@@ -22,3 +22,5 @@
 coverage.txt
 develop.log
 integration.log
+
+dist/
