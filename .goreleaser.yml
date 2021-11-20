@@ -1,5 +1,7 @@
 project_name: Gatekeeper
 
+dist: bin
+
 before:
   hooks:
     - go mod tidy
