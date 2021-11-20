@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -19,20 +20,20 @@ const (
 )
 
 type Config struct {
-	Environment    EnvType `envconfig:"ENVIRONMENT"     default:"dev"`
-	DBType         string  `envconfig:"DB_TYPE"         default:"inmemory"`
-	Host           string  `envconfig:"HOST"            default:"0.0.0.0"`
-	Port           string  `envconfig:"PORT"            default:"50051"`
-	RateLogin      int     `envconfig:"RATE_LOGIN"      default:"10"`
-	RatePassword   int     `envconfig:"RATE_PASSWORD"   default:"100"`
-	RateIP         int     `envconfig:"RATE_IP"         default:"1000"`
-	PrometheusPort string  `envconfig:"PROMETHEUS_PORT" default:"9091"`
+	Environment    EnvType `envconfig:"ENVIRONMENT"`
+	DBType         string  `envconfig:"DB_TYPE"`
+	Host           string  `envconfig:"HOST"`
+	Port           string  `envconfig:"PORT"`
+	RateLogin      int     `envconfig:"RATE_LOGIN"`
+	RatePassword   int     `envconfig:"RATE_PASSWORD"`
+	RateIP         int     `envconfig:"RATE_IP"`
+	PrometheusPort string  `envconfig:"PROMETHEUS_PORT"`
 	Logger         *Logger
 }
 
 type Logger struct {
-	Level string `envconfig:"LOGGER_LEVEL" default:"info"`
-	File  string `envconfig:"LOGGER_FILE"  default:"develop.log"`
+	Level string `envconfig:"LOGGER_LEVEL"`
+	File  string `envconfig:"LOGGER_FILE"`
 }
 
 type Bucket struct {
@@ -65,6 +66,9 @@ func GetBucketByRate(rate int) *Bucket {
 
 func Get() *Config {
 	once.Do(func() {
+		if err := godotenv.Load(); err != nil {
+			log.Print("Error loading .env file")
+		}
 		if err := envconfig.Process("", &config); err != nil {
 			log.Fatal(err)
 		}
