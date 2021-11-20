@@ -1,4 +1,4 @@
-project_name: Gatekeeper
+project_name: gatekeeper
 
 dist: bin
 
@@ -16,8 +16,8 @@ builds:
       - windows
       - darwin
     ldflags:
-      - -X github.com/maypok86/gatekeeper/cmd.version={{.Version}}
-      - -X github.com/maypok86/gatekeeper/cmd.buildDate={{.CommitDate}}
+      - -X github.com/maypok86/gatekeeper/cmd.version={{ .Version }}
+      - -X github.com/maypok86/gatekeeper/cmd.buildDate={{ .CommitDate }}
 
 archives:
   - builds: [gk]
