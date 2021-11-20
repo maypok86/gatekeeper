@@ -16,7 +16,7 @@ api: build ## Start api server
 
 .PHONY: up
 up:
-	docker-compose -f ./deployments/docker-compose.yml up -d
+	bash scripts/up.sh
 
 .PHONY: down
 down:

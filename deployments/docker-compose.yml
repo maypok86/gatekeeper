@@ -6,6 +6,8 @@ services:
     build:
       context: ..
       dockerfile: build/Dockerfile
+      args:
+        LDFLAGS: ${LDFLAGS}
     ports:
       - "50051:50051"
       - "9091:9091" # prometheus
