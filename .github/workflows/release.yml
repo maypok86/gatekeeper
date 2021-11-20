@@ -6,6 +6,39 @@ on:
       - 'v*'
 
 jobs:
+  docker:
+    name: Build and push docker image
+    runs-on: ubuntu-latest
+    env:
+      OWNER: maypok86
+      REGISTRY: ghcr.io
+    steps:
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.17
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Log in to GitHub Container Registry
+        run: |
+          echo $GITHUB_TOKEN | docker login $REGISTRY -u $OWNER --password-stdin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build docker image
+        run: |
+          export IMAGE_NAME=$REGISTRY/$OWNER/gatekeeper
+          docker build -f build/Dockerfile -t $IMAGE_NAME:$(git describe --tags --abbrev=0) -t $IMAGE_NAME:latest .
+
+      - name: Push docker image
+        run: |
+          export IMAGE_NAME=$REGISTRY/$OWNER/gatekeeper
+          docker push $IMAGE_NAME:$(git describe --tags --abbrev=0)
+          docker push $IMAGE_NAME:latest
+
   goreleaser:
     name: Create release
     runs-on: ubuntu-latest
