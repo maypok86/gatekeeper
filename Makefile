@@ -14,6 +14,14 @@ build: ## Build a version
 api: build ## Start api server
 	echo -n > develop.log && $(BIN) api
 
+.PHONY: up
+up:
+	docker-compose -f ./deployments/docker-compose.yml up -d
+
+.PHONY: down
+down:
+	docker-compose -f ./deployments/docker-compose.yml down
+
 .PHONY: version
 version: build ## Build and view project version
 	$(BIN) version
