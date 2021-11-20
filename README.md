@@ -3,57 +3,57 @@
 ![Go Report](https://goreportcard.com/badge/github.com/maypok86/gatekeeper)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-## Общее описание
-Сервис предназначен для борьбы с подбором паролей при авторизации в какой-либо системе.
-Сервис вызывается перед авторизацией пользователя и может либо разрешить, либо заблокировать попытку.
-Предполагается, что сервис используется только для server-server, т.е. скрыт от конечного пользователя.
+## General description
+The service is designed to combat password brute-forcing during authorization in any system.
+The service is called before the user is authorized and can either allow or block the attempt.
+It is assumed that the service is used only for server-server, i.e. it is hidden from the end user.
 
-## Алгоритм работы
-Сервис ограничивает частоту попыток авторизации для различных комбинаций параметров, например:
-* не более `RATE_LOGIN = 10` попыток в минуту для данного логина.
-* не более `RATE_PASSWORD = 100` попыток в минуту для данного пароля (защита от обратного brute-force).
-* не более `RATE_IP = 1000` попыток в минуту для данного IP (число большое, т.к. NAT).
+## Algorithm of work
+The service limits the frequency of authorization attempts for different combinations of parameters, for example:
+* no more than `RATE_LOGIN = 10` attempts per minute for this login.
+* no more than `RATE_PASSWORD = 100` attempts per minute for a given password (protection against reverse brute-force).
+* no more than `RATE_IP = 1000` attempts per minute for a given IP (a large number, because NAT).
 
-White/black листы содержат списки адресов сетей, которые обрабатываются более простым способом.
-Если входящий ip в whitelist - сервис безусловно разрешает авторизацию (ok=true), если в blacklist - отклоняет (ok=false).
+White/black lists contain lists of network addresses, which are handled in a simpler way.
+If incoming ip is in whitelist - service unconditionally allows authorization (ok=true), if in blacklist - rejects (ok=false).
 
-Для работы используется пакет [time/rate](https://pkg.go.dev/golang.org/x/time/rate), в котором реализован алгоритм [token bucket](https://en.wikipedia.org/wiki/Token_bucket).
+It uses [time/rate](https://pkg.go.dev/golang.org/x/time/rate) package, which implements the [token bucket](https://en.wikipedia.org/wiki/Token_bucket) algorithm.
 
-## Описание методов API
+## Description of API methods
 
-### Попытка авторизации
-Запрос:
+### Authorization attempt
+Request:
 * login
 * password
 * ip
 
-Ответ:
-* ok (true/false) - сервис должен возвращать ok=true, если считает что запрос нормальный
-  и ok=false, если считает что происходит bruteforce.
+Response:
+* ok (true/false) - the service should return ok=true if it thinks the request is normal
+and ok=false if the request is brute-force.
 
-### Сброс bucket по login
+### Reset bucket by login
 * login
 
-Должен очистить bucket-ы соответствующие переданному login.
+Must clear the bucket(s) corresponding to the passed login.
 
-### Сброс bucket по IP
+### Reset bucket by IP
 * ip
 
-Должен очистить bucket-ы соответствующие переданному ip.
+Must clear the bucket(s) corresponding to the passed ip.
 
-### Добавление IP в blacklist
+### Add IP to blacklist
 * subnet (ip + mask)
 
-### Удаление IP из blacklist
+### Remove IP from blacklist
 * subnet (ip + mask)
 
-### Добавление IP в whitelist
+### Add IP to whitelist
 * subnet (ip + mask)
 
-### Удаление IP из whitelist
+### Remove IP from whitelist
 * subnet (ip + mask)
 
-## Command-Line интерфейс
-Разработан command-line интерфейс для ручного администрирования сервиса.
-Через CLI есть возможность вызвать сброс бакета и управлять whitelist/blacklist-ом.
-CLI работает через GRPC интерфейс.
+## Command-Line interface
+A command-line interface for manual administration of the service is developed.
+The CLI allows you to reset the bucket and manage the whitelist/blacklist.
+The CLI works through GRPC interface.
