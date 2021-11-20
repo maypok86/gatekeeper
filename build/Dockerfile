@@ -19,9 +19,11 @@ RUN CGO_ENABLED=0 go build \
 FROM alpine:latest
 LABEL maintainer="Mayshev Alex <alex.mayshev.86@gmail.com>"
 
-ENV BIN_FILE /opt/gatekeeper
-COPY --from=builder ${BIN_FILE} ${BIN_FILE}
+WORKDIR /app/
+
+COPY --from=builder /opt/gatekeeper .
+COPY --from=builder /go/src/.env .
 
 EXPOSE 50051
 
-CMD ${BIN_FILE} api
+CMD ["./gatekeeper", "api"]

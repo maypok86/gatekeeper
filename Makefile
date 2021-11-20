@@ -20,7 +20,7 @@ up:
 
 .PHONY: down
 down:
-	docker-compose -f ./deployments/docker-compose.yml down
+	docker-compose -f deployments/docker-compose.yml --env-file .env down
 
 .PHONY: version
 version: build ## Build and view project version

@@ -9,8 +9,8 @@ services:
       args:
         LDFLAGS: ${LDFLAGS}
     ports:
-      - "50051:50051"
-      - "9091:9091" # prometheus
+      - "${PORT}:${PORT}"
+      - "${PROMETHEUS_PORT}:${PROMETHEUS_PORT}" # prometheus
     networks:
       - monitoring
     restart: always
