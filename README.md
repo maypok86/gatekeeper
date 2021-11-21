@@ -28,8 +28,8 @@ Request:
 * ip
 
 Response:
-* ok (true/false) - the service should return ok=true if it thinks the request is normal 
-  and ok=false if the request is brute-force.
+* ok (true/false) - the service should return ok=true if it thinks the request is normal
+and ok=false if the request is brute-force.
 
 ### Reset bucket by login
 * login
@@ -68,6 +68,8 @@ For the service configuration are used environment variables:
 * `LOGGER_LEVEL` - logging level, possible values: `DEBUG, INFO, WARN, ERRORS, PANIC, DPANIC, FATAL`, default value: `INFO`
 * `LOGGER_FILE` - the name of the file that will be logged, default value: `develop.log`
 
+For configuration, it is advisable to use the file .env in the root of the project.
+
 ## Deployment
 To start or stop the service, run the commands in the project directory:
 * `make up` - start the service
@@ -75,10 +77,9 @@ To start or stop the service, run the commands in the project directory:
 
 ## Testing
 * The service is covered by unit tests.
-* There are integration tests - as part of the test, the server rises and the logic of work is tested. 
+* There are integration tests - as part of the test, the server rises and the logic of work is tested.
 
 ## Monitoring
 When you start a build in docker prometheus comes up
-To access prometheus you need to go to: http://localhost:9090  
+To access prometheus you need to go to: http://localhost:9090
 View status: http://localhost:9090/targets
-
