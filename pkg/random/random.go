@@ -1,31 +1,39 @@
 package random
 
 import (
-	"math/rand"
-	"strings"
-	"time"
+	"crypto/rand"
+	"math/big"
 )
 
-const alphabet = "abcdefghijklmnopqrstuvwxyz"
+const (
+	alphabet       = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-"
+	alphabetLength = int64(len(alphabet))
+)
 
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
-
-//nolint:gosec
-func Int(min, max int64) int64 {
-	return min + rand.Int63n(max-min+1)
-}
-
-//nolint:gosec
-func String(length int) string {
-	var sb strings.Builder
-	k := len(alphabet)
-
-	for i := 0; i < length; i++ {
-		c := alphabet[rand.Intn(k)]
-		sb.WriteByte(c)
+func Int(min, max int64) (int64, error) {
+	number, err := rand.Int(rand.Reader, big.NewInt(max-min+1))
+	if err != nil {
+		return 0, err
 	}
+	return min + number.Int64(), nil
+}
 
-	return sb.String()
+func Bytes(length int) ([]byte, error) {
+	bytes := make([]byte, length)
+	for i := 0; i < length; i++ {
+		number, err := rand.Int(rand.Reader, big.NewInt(alphabetLength))
+		if err != nil {
+			return nil, err
+		}
+		bytes[i] = alphabet[number.Int64()]
+	}
+	return bytes, nil
+}
+
+func String(length int) (string, error) {
+	bytes, err := Bytes(length)
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), err
 }
