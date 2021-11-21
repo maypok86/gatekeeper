@@ -8,6 +8,9 @@ The service is designed to combat password brute-forcing during authorization in
 The service is called before the user is authorized and can either allow or block the attempt.
 It is assumed that the service is used only for server-server, i.e. it is hidden from the end user.
 
+## Project architecture
+<img src="assets/architecture.jpg">
+
 ## Algorithm of work
 The service limits the frequency of authorization attempts for different combinations of parameters, for example:
 * no more than `RATE_LOGIN = 10` attempts per minute for this login.
