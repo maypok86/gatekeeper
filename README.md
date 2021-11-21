@@ -84,5 +84,5 @@ To start or stop the service, run the commands in the project directory:
 
 ## Monitoring
 When you start a build in docker prometheus comes up
-To access prometheus you need to go to: http://localhost:9090
+To access prometheus you need to go to: http://localhost:9090.
 View status: http://localhost:9090/targets
