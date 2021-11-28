@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"github.com/prometheus/client_golang/prometheus"
 	"log"
 	"net"
 	"net/http"
@@ -38,13 +39,19 @@ var apiCmd = &cobra.Command{
 		logger.Configure(cfg.Logger)
 		zap.L().Info("Logger init success")
 
+		promRegistry := prometheus.NewRegistry()
+		grpcMetrics := grpc_prometheus.NewServerMetrics()
+		promRegistry.MustRegister(grpcMetrics)
+
 		grpcServer := grpc.NewServer(
 			grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
 				grpc_prometheus.StreamServerInterceptor,
+				grpcMetrics.StreamServerInterceptor(),
 				grpc_zap.StreamServerInterceptor(zap.L()),
 			)),
 			grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
 				grpc_prometheus.UnaryServerInterceptor,
+				grpcMetrics.UnaryServerInterceptor(),
 				grpc_zap.UnaryServerInterceptor(zap.L()),
 			)),
 		)
@@ -63,6 +70,7 @@ var apiCmd = &cobra.Command{
 
 		grpc_prometheus.Register(grpcServer)
 		grpc_prometheus.EnableHandlingTimeHistogram()
+		grpcMetrics.InitializeMetrics(grpcServer)
 		zap.L().Info("Monitoring export listen ", zap.String("port", cfg.PrometheusPort))
 		go func() {
 			err = http.ListenAndServe(net.JoinHostPort(cfg.Host, cfg.PrometheusPort), promhttp.Handler())

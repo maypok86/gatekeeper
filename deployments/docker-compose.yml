@@ -11,9 +11,11 @@ services:
     ports:
       - "${PORT}:${PORT}"
       - "${PROMETHEUS_PORT}:${PROMETHEUS_PORT}" # prometheus
+    restart: always
+    depends_on:
+      - prometheus
     networks:
       - monitoring
-    restart: always
 
   prometheus:
     container_name: prometheus
@@ -23,6 +25,7 @@ services:
       network: host
     ports:
       - "9090:9090"
+    restart: always
     networks:
       - monitoring
 
