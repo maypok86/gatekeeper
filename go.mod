@@ -12,7 +12,7 @@ require (
 	github.com/prometheus/client_golang v1.11.0
 	github.com/spf13/cobra v1.2.1
 	github.com/stretchr/testify v1.7.0
-	go.uber.org/zap v1.19.1
+	go.uber.org/zap v1.20.0
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3
 	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11
 	google.golang.org/grpc v1.42.0
