@@ -16,7 +16,7 @@ require (
 	golang.org/x/crypto v0.26.0
 	golang.org/x/time v0.6.0
 	google.golang.org/grpc v1.42.0
-	google.golang.org/protobuf v1.28.0
+	google.golang.org/protobuf v1.34.2
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 )
 
