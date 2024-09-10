@@ -1,4 +1,4 @@
-FROM golang:1.17-alpine AS builder
+FROM golang:1.23-alpine AS builder
 
 ENV BIN_FILE /opt/gatekeeper
 ENV CODE_DIR /go/src/
