@@ -2,7 +2,7 @@ module github.com/maypok86/gatekeeper
 
 go 1.21
 
-toolchain go1.23.1
+toolchain go1.27.1
 
 require (
 	github.com/cucumber/godog v0.12.5
